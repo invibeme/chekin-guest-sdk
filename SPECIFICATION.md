@@ -137,7 +137,7 @@ High-Level Architecture
 
 ### 📝 Naming Convention Update
 
-**Migration from "hosts-sdk" to "host-sdk"**
+**Migration from "hosts-sdk" to "guest-sdk"**
 
 Following industry standards and semantic clarity, we're adopting singular naming:
 
@@ -151,7 +151,7 @@ Following industry standards and semantic clarity, we're adopting singular namin
 
 - Repository: `chekin-guest-sdk`
 - Package: `chekin-guest-sdk`
-- Directory: `apps/host-sdk/`
+- Directory: `apps/guest-sdk/`
 
 **Reasoning:**
 
@@ -198,7 +198,7 @@ chekin-guest-sdk/
 **Current Monorepo: `dashboard-chekin`**
 
 ```
-apps/host-sdk/                      # Iframe application (to be renamed)
+apps/guest-sdk/                      # Iframe application (to be renamed)
 ├── src/
 │   ├── App.tsx                     # Main application
 │   ├── main.ts                     # Entry point
@@ -898,7 +898,6 @@ export { useChekinToast } from './hooks/useChekinToast';
 // Types
 export type {
   ChekinConfig,
-  ChekinEventType,
   InlineWidgetProps,
   PopupWidgetProps
 } from './types';

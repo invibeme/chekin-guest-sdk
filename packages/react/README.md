@@ -4,7 +4,7 @@ React components and hooks for integrating Chekin's host management platform int
 
 ## Overview
 
-This package provides React-specific components and hooks that make it easy to integrate the Chekin Host SDK into React applications. It handles component lifecycle, event management, and provides a clean React API.
+This package provides React-specific components and hooks that make it easy to integrate the Chekin Guest SDK into React applications. It handles component lifecycle, event management, and provides a clean React API.
 
 ## Key Features
 
@@ -112,7 +112,7 @@ function MyComponent() {
 
 ### ChekinGuestSDKView Component
 
-The main React component for embedding the Chekin Host SDK.
+The main React component for embedding the Chekin Guest SDK.
 
 #### Props
 

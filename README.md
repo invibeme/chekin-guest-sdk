@@ -1,6 +1,6 @@
-# Chekin Host SDK
+# Chekin Guest SDK
 
-A modern, framework-agnostic SDK for integrating Chekin's host management platform into your applications. Built with TypeScript and designed for security, performance, and developer experience.
+A modern, framework-agnostic SDK for integrating Chekin's guest registration platform into your applications. Enables seamless guest check-in workflows including registration forms, payment processing, ID verification, and booking management. Built with TypeScript and designed for security, performance, and developer experience.
 
 ## Features
 
@@ -78,7 +78,7 @@ This repository contains multiple packages:
 
 - **[`chekin-guest-sdk`](./packages/core/README.md)** - Core framework-agnostic SDK
 - **[`chekin-guest-sdk-react`](./packages/react/README.md)** - React components and hooks
-- **`apps/host-sdk`** - Iframe application (deployed to CDN)
+- **`apps/guest-sdk`** - Iframe application (deployed to CDN)
 
 ## Architecture
 
@@ -247,7 +247,7 @@ npm run build
 # Build specific package
 npm run build:core
 npm run build:react
-npm run build:host-sdk
+npm run build:guest-sdk
 ```
 
 ### Development
@@ -259,7 +259,7 @@ npm run dev
 # Start specific package
 nx dev core
 nx dev react
-nx serve host-sdk
+nx serve guest-sdk
 ```
 
 ### Testing

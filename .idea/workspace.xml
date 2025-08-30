@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8236fba-235e-46f8-bb1b-dbe99a6e09b0" name="Changes" comment="" />
+    <list default="true" id="f8236fba-235e-46f8-bb1b-dbe99a6e09b0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MIGRATION_PLAN.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SPECIFICATION.md" beforeDir="false" afterPath="$PROJECT_DIR$/SPECIFICATION.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/combined-sandbox.html" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/combined-sandbox.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/ChekinGuestSDK.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/ChekinGuestSDK.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/ChekinPro.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/__tests__/setup.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/__tests__/utils/formatChekinUrl.test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/__tests__/utils/validation.test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/constants/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/constants/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdk.md" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,6 +51,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JavaScript Debug.combined-sandbox.html (1).executor": "Run",
     "JavaScript Debug.combined-sandbox.html.executor": "Run",
     "JavaScript Debug.sandbox.html.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
@@ -50,7 +67,7 @@
     "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "/Users/v.sviridov/Job/Projects/chekin-guest-sdk/node_modules/prettier",
     "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
-    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external"
+    "ts.external.directory.path": "/Users/v.sviridov/Job/Projects/chekin-guest-sdk/node_modules/typescript/lib"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -60,7 +77,10 @@
       <recent name="$PROJECT_DIR$/main-app" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.combined-sandbox.html">
+  <component name="RunManager" selected="JavaScript Debug.combined-sandbox.html (1)">
+    <configuration name="combined-sandbox.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/chekin-guest-sdk/packages/core/combined-sandbox.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <configuration name="combined-sandbox.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/chekin-host-sdk/packages/core/combined-sandbox.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -69,6 +89,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.combined-sandbox.html (1)" />
         <item itemvalue="JavaScript Debug.combined-sandbox.html" />
         <item itemvalue="JavaScript Debug.sandbox.html" />
       </list>

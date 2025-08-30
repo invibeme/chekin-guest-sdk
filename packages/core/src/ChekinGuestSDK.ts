@@ -1,4 +1,4 @@
-import {ChekinGuestSDKConfig, ChekinEventCallback} from './types';
+import {ChekinGuestSDKConfig, ChekinEventCallback, UseOnScreenChanged} from './types';
 import {ChekinCommunicator} from './communication/ChekinCommunicator.js';
 import {formatChekinUrl} from './utils/formatChekinUrl.js';
 import {ChekinLogger, type ChekinLoggerConfig} from './utils/ChekinLogger.js';
@@ -75,7 +75,6 @@ export class ChekinGuestSDK {
     return validationResult;
   }
 
-  // Initialize SDK (similar to your original initialize method)
   public initialize(config: ChekinGuestSDKConfig): void {
     this.logger.info('Initializing SDK with new configuration');
     this.config = {...this.config, ...config};
@@ -83,7 +82,6 @@ export class ChekinGuestSDK {
     this.logger.logConfigUpdate(config);
   }
 
-  // Guest SDK specific methods for compatibility with original API
   public renderApp(options: {targetNode: string}): Promise<HTMLIFrameElement> {
     return this.render(options.targetNode);
   }
@@ -92,13 +90,14 @@ export class ChekinGuestSDK {
     this.destroy();
   }
 
-  public initAndRender(config: ChekinGuestSDKConfig & {targetNode: string}): Promise<HTMLIFrameElement> {
+  public initAndRender(
+    config: ChekinGuestSDKConfig & {targetNode: string},
+  ): Promise<HTMLIFrameElement> {
     const {targetNode, ...sdkConfig} = config;
     this.initialize(sdkConfig);
     return this.renderApp({targetNode});
   }
 
-  // Framework-agnostic render method (similar to your renderApp)
   public render(container: string | HTMLElement): Promise<HTMLIFrameElement> {
     const containerId =
       typeof container === 'string' ? container : container.id || 'unknown';
@@ -251,29 +250,47 @@ export class ChekinGuestSDK {
       this.communicator.on(CHEKIN_EVENTS.GUEST_REGISTERED, this.config.onGuestRegistered);
     }
     if (this.config.onAllGuestsRegistered) {
-      this.communicator.on(CHEKIN_EVENTS.ALL_GUESTS_REGISTERED, this.config.onAllGuestsRegistered);
+      this.communicator.on(
+        CHEKIN_EVENTS.ALL_GUESTS_REGISTERED,
+        this.config.onAllGuestsRegistered,
+      );
     }
     if (this.config.onReservationFound) {
-      this.communicator.on(CHEKIN_EVENTS.RESERVATION_FOUND, this.config.onReservationFound);
+      this.communicator.on(
+        CHEKIN_EVENTS.RESERVATION_FOUND,
+        this.config.onReservationFound,
+      );
     }
     if (this.config.onReservationFetched) {
-      this.communicator.on(CHEKIN_EVENTS.RESERVATION_FETCHED, this.config.onReservationFetched);
+      this.communicator.on(
+        CHEKIN_EVENTS.RESERVATION_FETCHED,
+        this.config.onReservationFetched,
+      );
     }
     if (this.config.onIVFinished) {
       this.communicator.on(CHEKIN_EVENTS.IV_FINISHED, this.config.onIVFinished);
     }
     if (this.config.onReservationCreated) {
-      this.communicator.on(CHEKIN_EVENTS.RESERVATION_CREATED, this.config.onReservationCreated);
+      this.communicator.on(
+        CHEKIN_EVENTS.RESERVATION_CREATED,
+        this.config.onReservationCreated,
+      );
     }
     if (this.config.onReservationFoundFromHousing) {
-      this.communicator.on(CHEKIN_EVENTS.RESERVATION_FOUND_FROM_HOUSING, this.config.onReservationFoundFromHousing);
+      this.communicator.on(
+        CHEKIN_EVENTS.RESERVATION_FOUND_FROM_HOUSING,
+        this.config.onReservationFoundFromHousing,
+      );
     }
     if (this.config.onScreenChanged) {
-      this.communicator.on(CHEKIN_EVENTS.SCREEN_CHANGED, (data: {type: string; reservationId: string; meta: any}) => {
-        this.config.onScreenChanged!(data.type as 'PAYMENTS_CART' | 'ORDER_HISTORY', data.reservationId, data.meta);
-      });
+      this.communicator.on(
+        CHEKIN_EVENTS.SCREEN_CHANGED,
+        (data: UseOnScreenChanged<Record<string, unknown>>) => {
+          this.config.onScreenChanged!(data);
+        },
+      );
     }
-    
+
     // Set up other event callbacks from config
     if (this.config.onError) {
       this.communicator.on(CHEKIN_EVENTS.ERROR, this.config.onError);
@@ -339,16 +356,8 @@ export class ChekinGuestSDK {
     return this.logger;
   }
 
-  public async sendLogs(endpoint?: string): Promise<void> {
-    await this.logger.sendLogs(endpoint);
-  }
-
   public static validateConfig(config: ChekinGuestSDKConfig): ValidationResult {
     const validator = new ChekinSDKValidator();
     return validator.validateConfig(config);
-  }
-
-  public getValidationResult(): ValidationResult {
-    return this.validator.validateConfig(this.config);
   }
 }

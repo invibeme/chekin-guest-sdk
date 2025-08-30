@@ -27,7 +27,9 @@ export interface UrlConfigResult {
   isLengthLimited: boolean;
 }
 
-export function formatChekinUrl(config: ChekinGuestSDKConfig | ChekinSDKConfig): UrlConfigResult {
+export function formatChekinUrl(
+  config: ChekinGuestSDKConfig | ChekinSDKConfig,
+): UrlConfigResult {
   const version = config.version || 'latest';
   const baseUrl = config.baseUrl || getBaseUrl(version);
 
@@ -35,9 +37,8 @@ export function formatChekinUrl(config: ChekinGuestSDKConfig | ChekinSDKConfig):
 
   const essentialParams = {
     apiKey: config.apiKey,
-    features: (config as any).features,
     housingId: config.housingId,
-    externalHousingId: (config as any).externalHousingId,
+    externalId: config.externalId,
     reservationId: config.reservationId,
     lang: config.defaultLanguage,
     autoHeight: config.autoHeight,
@@ -83,29 +84,6 @@ export function formatChekinUrl(config: ChekinGuestSDKConfig | ChekinSDKConfig):
     }
   }
 
-  // Check if we can add hiddenSections to URL
-  if ((config as any).hiddenSections?.length) {
-    const sectionsParam = (config as any).hiddenSections.join(',');
-    if (sectionsParam.length < 200) {
-      url.searchParams.set('hiddenSections', sectionsParam);
-    } else {
-      postMessageConfig = {
-        ...postMessageConfig,
-        hiddenSections: (config as any).hiddenSections,
-      };
-      isLengthLimited = true;
-    }
-  }
-
-  // Large JSON objects always go via postMessage
-  if ((config as any).hiddenFormFields) {
-    postMessageConfig = {
-      ...postMessageConfig,
-      hiddenFormFields: (config as any).hiddenFormFields,
-    };
-    isLengthLimited = true;
-  }
-
   if ((config as any).payServicesConfig) {
     postMessageConfig = {
       ...postMessageConfig,
@@ -120,17 +98,8 @@ export function formatChekinUrl(config: ChekinGuestSDKConfig | ChekinSDKConfig):
     const minimalUrl = new URL(baseUrl);
     minimalUrl.searchParams.set('apiKey', config.apiKey);
 
-    if (config.housingId) {
-      minimalUrl.searchParams.set('housingId', config.housingId);
-    }
-
-    if ((config as any).externalHousingId) {
-      minimalUrl.searchParams.set('externalHousingId', (config as any).externalHousingId);
-    }
-
     postMessageConfig = {
       ...postMessageConfig,
-      features: (config as any).features,
       reservationId: config.reservationId,
       defaultLanguage: config.defaultLanguage,
     };
