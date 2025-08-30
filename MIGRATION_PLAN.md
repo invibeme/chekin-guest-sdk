@@ -8,18 +8,18 @@ This document outlines the complete migration plan from the **Chekin Host SDK** 
 
 ### Existing Project Structure
 ```
-chekin-host-sdk/
+chekin-guest-sdk/
 ├── packages/
-│   ├── core/                    # chekin-host-sdk (vanilla JS/TS)
+│   ├── core/                    # chekin-guest-sdk (vanilla JS/TS)
 │   │   ├── src/
-│   │   │   ├── ChekinHostSDK.ts        # Main SDK class
+│   │   │   ├── ChekinGuestSDK.ts        # Main SDK class
 │   │   │   ├── communication/          # postMessage handling
 │   │   │   ├── utils/                  # Utilities
 │   │   │   └── types/                  # TypeScript definitions
 │   │   └── sandbox.html               # Development sandbox
-│   └── react/                   # chekin-host-sdk-react (React components)
-│       ├── src/components/             # ChekinHostSDKView
-│       └── src/hooks/                  # useHostSDKEventListener
+│   └── react/                   # chekin-guest-sdk-react (React components)
+│       ├── src/components/             # ChekinGuestSDKView
+│       └── src/hooks/                  # useGuestSDKEventListener
 ```
 
 ### Current Features (Host SDK)
@@ -38,7 +38,7 @@ chekin-host-sdk/
 ### Core Functionality Changes
 Based on sdk.md analysis, the Guest SDK needs:
 
-1. **Different API Surface**: ChekinPro class instead of ChekinHostSDK
+1. **Different API Surface**: ChekinPro class instead of ChekinGuestSDK
 2. **Different Methods**:
    - `initialize()` - Initialize with config
    - `renderApp()` - Render to target node
@@ -74,14 +74,14 @@ Based on sdk.md analysis, the Guest SDK needs:
 
 #### 1.1 Update Package Names and Metadata
 - [ ] Update root `package.json`:
-  - Name: `chekin-host-sdk` → `chekin-guest-sdk`
+  - Name: `chekin-guest-sdk` → `chekin-guest-sdk`
   - Description: Update to reflect guest SDK
   - Repository: Update GitHub URL if needed
 - [ ] Update `packages/core/package.json`:
-  - Name: `chekin-host-sdk` → `chekin-guest-sdk`
+  - Name: `chekin-guest-sdk` → `chekin-guest-sdk`
   - Update exports and main fields
 - [ ] Update `packages/react/package.json`:
-  - Name: `chekin-host-sdk-react` → `chekin-guest-sdk-react`
+  - Name: `chekin-guest-sdk-react` → `chekin-guest-sdk-react`
   - Update peerDependencies to reference new core package
 
 #### 1.2 Update Documentation Files
@@ -99,8 +99,8 @@ Based on sdk.md analysis, the Guest SDK needs:
 ### Phase 2: Core SDK Transformation
 
 #### 2.1 Rename and Adapt Main SDK Class
-- [ ] Rename `ChekinHostSDK.ts` → `ChekinGuestSDK.ts`
-- [ ] Update class name: `ChekinHostSDK` → `ChekinGuestSDK`
+- [ ] Rename `ChekinGuestSDK.ts` → `ChekinGuestSDK.ts`
+- [ ] Update class name: `ChekinGuestSDK` → `ChekinGuestSDK`
 - [ ] Add legacy `ChekinPro` class that extends/wraps `ChekinGuestSDK`
 - [ ] Implement guest-specific API methods:
   - `initialize(config)` - Update config and validate
@@ -151,20 +151,20 @@ Based on sdk.md analysis, the Guest SDK needs:
 ### Phase 4: React Components Transformation
 
 #### 4.1 Rename and Update React Components
-- [ ] Rename `ChekinHostSDKView.tsx` → `ChekinGuestSDKView.tsx`
+- [ ] Rename `ChekinGuestSDKView.tsx` → `ChekinGuestSDKView.tsx`
 - [ ] Update component props to use `ChekinGuestSDKConfig`
-- [ ] Update component to use `ChekinGuestSDK` instead of `ChekinHostSDK`
+- [ ] Update component to use `ChekinGuestSDK` instead of `ChekinGuestSDK`
 - [ ] Ensure all guest-specific props are properly handled
 
 #### 4.2 Update React Hooks
-- [ ] Rename `useHostSDKEventListener.ts` → `useGuestSDKEventListener.ts`
+- [ ] Rename `useGuestSDKEventListener.ts` → `useGuestSDKEventListener.ts`
 - [ ] Update hook to work with guest-specific events
 - [ ] Ensure type safety with new event types
 
 #### 4.3 Update React Package Exports
 - [ ] Update `packages/react/src/index.ts`:
-  - Export `ChekinGuestSDKView` instead of `ChekinHostSDKView`
-  - Export `useGuestSDKEventListener` instead of `useHostSDKEventListener`
+  - Export `ChekinGuestSDKView` instead of `ChekinGuestSDKView`
+  - Export `useGuestSDKEventListener` instead of `useGuestSDKEventListener`
   - Maintain backward compatibility if needed
 
 ### Phase 5: Build System and CDN Preparation
@@ -197,7 +197,7 @@ Based on sdk.md analysis, the Guest SDK needs:
 
 #### 6.2 Update Sandbox Files
 - [ ] Update `packages/core/sandbox.html`:
-  - Use `ChekinPro` API instead of `ChekinHostSDK`
+  - Use `ChekinPro` API instead of `ChekinGuestSDK`
   - Test guest-specific configuration options
   - Validate CDN loading scenario
 

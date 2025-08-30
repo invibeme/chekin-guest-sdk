@@ -18,10 +18,10 @@ A modern, framework-agnostic SDK for integrating Chekin's host management platfo
 
 ```bash
 # For vanilla JavaScript/TypeScript
-npm install chekin-host-sdk
+npm install chekin-guest-sdk
 
 # For React applications (In development and not available on npm yet)
-npm install chekin-host-sdk-react
+npm install chekin-guest-sdk-react
 ```
 
 ### Basic Usage
@@ -29,9 +29,9 @@ npm install chekin-host-sdk-react
 #### Vanilla JavaScript
 
 ```javascript
-import {ChekinHostSDK} from 'chekin-host-sdk';
+import {ChekinGuestSDK} from 'chekin-guest-sdk';
 
-const sdk = new ChekinHostSDK({
+const sdk = new ChekinGuestSDK({
   apiKey: 'your-api-key',
   features: ['IV', 'LIVENESS_DETECTION'],
 });
@@ -44,11 +44,11 @@ sdk.render('chekin-container').then(() => {
 #### React
 
 ```jsx
-import {ChekinHostSDKView} from 'chekin-host-sdk-react';
+import {ChekinGuestSDKView} from 'chekin-guest-sdk-react';
 
 function MyComponent() {
   return (
-    <ChekinHostSDKView
+    <ChekinGuestSDKView
       apiKey="your-api-key"
       features={['IV', 'LIVENESS_DETECTION']}
       onHeightChanged={height => console.log(height)}
@@ -60,15 +60,15 @@ function MyComponent() {
 #### React with Event Handling
 
 ```jsx
-import {useHostSDKEventListener, ChekinHostSDKView} from 'chekin-host-sdk-react';
+import {useGuestSDKEventListener, ChekinGuestSDKView} from 'chekin-guest-sdk-react';
 
 function MyComponent() {
-  useHostSDKEventListener({
+  useGuestSDKEventListener({
     onHeightChanged: height => console.log('Height:', height),
     onError: error => console.error('SDK Error:', error),
   });
 
-  return <ChekinHostSDKView apiKey="your-api-key" features={['IV']} />;
+  return <ChekinGuestSDKView apiKey="your-api-key" features={['IV']} />;
 }
 ```
 
@@ -76,8 +76,8 @@ function MyComponent() {
 
 This repository contains multiple packages:
 
-- **[`chekin-host-sdk`](./packages/core/README.md)** - Core framework-agnostic SDK
-- **[`chekin-host-sdk-react`](./packages/react/README.md)** - React components and hooks
+- **[`chekin-guest-sdk`](./packages/core/README.md)** - Core framework-agnostic SDK
+- **[`chekin-guest-sdk-react`](./packages/react/README.md)** - React components and hooks
 - **`apps/host-sdk`** - Iframe application (deployed to CDN)
 
 ## Architecture
@@ -87,7 +87,7 @@ This repository contains multiple packages:
 │   Your App      │    │   NPM Package    │    │  Iframe App     │
 │                 │    │                  │    │                 │
 │  ┌───────────┐  │    │  ┌────────────┐  │    │  ┌───────────┐  │
-│  │Integration│  │◄──►│  │ChekinHost  │  │◄──►│  │ Host UI   │  │
+│  │Integration│  │◄──►│  │ChekinGuest │  │◄──►│  │Guest UI   │  │
 │  │Component  │  │    │  │    SDK     │  │    │  │ (React)   │  │
 │  └───────────┘  │    │  └────────────┘  │    │  └───────────┘  │
 │                 │    │        │         │    │                 │
@@ -153,20 +153,20 @@ sdk.on('ready', () => {
 
 ## React Components
 
-### ChekinHostSDKView
+### ChekinGuestSDKView
 
 The main React component that embeds the SDK directly in your application:
 
 ```jsx
 import { useRef } from 'react';
-import { ChekinHostSDKView } from 'chekin-host-sdk-react';
-import type { ChekinHostSDKViewHandle } from 'chekin-host-sdk-react';
+import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
+import type { ChekinGuestSDKViewHandle } from 'chekin-guest-sdk-react';
 
 function MyComponent() {
-  const sdkRef = useRef<ChekinHostSDKViewHandle>(null);
+  const sdkRef = useRef<ChekinGuestSDKViewHandle>(null);
 
   return (
-    <ChekinHostSDKView
+    <ChekinGuestSDKView
       ref={sdkRef}
       apiKey="your-api-key"
       features={['IV', 'LIVENESS_DETECTION']}
@@ -182,15 +182,15 @@ function MyComponent() {
 
 ## React Hooks
 
-### useHostSDKEventListener
+### useGuestSDKEventListener
 
 Listen to SDK events with automatic cleanup:
 
 ```jsx
-import {useHostSDKEventListener} from 'chekin-host-sdk-react';
+import {useGuestSDKEventListener} from 'chekin-guest-sdk-react';
 
 function MyComponent() {
-  useHostSDKEventListener({
+  useGuestSDKEventListener({
     onHeightChanged: height => {
       console.log('Height changed:', height);
     },
@@ -208,7 +208,7 @@ function MyComponent() {
     },
   });
 
-  return <ChekinHostSDKView apiKey="your-api-key" />;
+  return <ChekinGuestSDKView apiKey="your-api-key" />;
 }
 ```
 
@@ -233,8 +233,8 @@ connect-src https://api.chekin.com;
 ### Setup
 
 ```bash
-git clone https://github.com/chekin/chekin-host-sdk.git
-cd chekin-host-sdk
+git clone https://github.com/chekin/chekin-guest-sdk.git
+cd chekin-guest-sdk
 npm install
 ```
 
@@ -301,4 +301,4 @@ MIT License - see [LICENSE](./LICENSE) file for details.
 
 - 📧 Email: support@chekin.com
 - 📖 Documentation: https://docs.chekin.com
-- 🐛 Issues: https://github.com/chekin/chekin-host-sdk/issues
+- 🐛 Issues: https://github.com/chekin/chekin-guest-sdk/issues

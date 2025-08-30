@@ -1,10 +1,10 @@
-# chekin-host-sdk (Core Package)
+# chekin-guest-sdk (Core Package)
 
 The core framework-agnostic SDK package for integrating Chekin's host management platform into web applications through secure iframe embedding.
 
 ## Overview
 
-This package provides the foundational `ChekinHostSDK` class that can be used in any JavaScript/TypeScript environment, regardless of framework. It handles iframe creation, secure communication via postMessage, configuration validation, and comprehensive logging.
+This package provides the foundational `ChekinGuestSDK` class that can be used in any JavaScript/TypeScript environment, regardless of framework. It handles iframe creation, secure communication via postMessage, configuration validation, and comprehensive logging.
 
 ## Key Features
 
@@ -19,15 +19,15 @@ This package provides the foundational `ChekinHostSDK` class that can be used in
 ## Installation
 
 ```bash
-npm install chekin-host-sdk
+npm install chekin-guest-sdk
 ```
 
 ## Quick Start
 
 ```javascript
-import {ChekinHostSDK} from 'chekin-host-sdk';
+import {ChekinGuestSDK} from 'chekin-guest-sdk';
 
-const sdk = new ChekinHostSDK({
+const sdk = new ChekinGuestSDK({
   apiKey: 'your-api-key',
   features: ['IV', 'LIVENESS_DETECTION'],
   autoHeight: true,
@@ -42,7 +42,7 @@ await sdk.render(document.getElementById('container'));
 
 ## Core Architecture
 
-### ChekinHostSDK Class (`src/ChekinHostSDK.ts`)
+### ChekinGuestSDK Class (`src/ChekinGuestSDK.ts`)
 
 Main SDK class providing:
 
@@ -76,7 +76,7 @@ Main SDK class providing:
 ### Constructor
 
 ```typescript
-new ChekinHostSDK(config: ChekinSDKConfig & { logger?: ChekinLoggerConfig })
+new ChekinGuestSDK(config: ChekinSDKConfig & { logger?: ChekinLoggerConfig })
 ```
 
 ### Methods
@@ -266,7 +266,7 @@ sdk.updateConfig({
 ```html
 <div id="chekin-container"></div>
 <script>
-  const sdk = new ChekinHostSDK({apiKey: 'your-key'});
+  const sdk = new ChekinGuestSDK({apiKey: 'your-key'});
   sdk.render('chekin-container');
 </script>
 ```
@@ -279,11 +279,11 @@ sdk.updateConfig({
 </template>
 
 <script>
-import {ChekinHostSDK} from 'chekin-host-sdk';
+import {ChekinGuestSDK} from 'chekin-guest-sdk';
 
 export default {
   mounted() {
-    this.sdk = new ChekinHostSDK({apiKey: 'your-key'});
+    this.sdk = new ChekinGuestSDK({apiKey: 'your-key'});
     this.sdk.render(this.$refs.container);
   },
   beforeUnmount() {
@@ -297,17 +297,17 @@ export default {
 
 ```typescript
 import {Component, ElementRef, ViewChild, OnInit, OnDestroy} from '@angular/core';
-import {ChekinHostSDK} from 'chekin-host-sdk';
+import {ChekinGuestSDK} from 'chekin-guest-sdk';
 
 @Component({
   template: '<div #container class="chekin-container"></div>',
 })
 export class ChekinComponent implements OnInit, OnDestroy {
   @ViewChild('container', {static: true}) container!: ElementRef;
-  private sdk!: ChekinHostSDK;
+  private sdk!: ChekinGuestSDK;
 
   ngOnInit() {
-    this.sdk = new ChekinHostSDK({apiKey: 'your-key'});
+    this.sdk = new ChekinGuestSDK({apiKey: 'your-key'});
     this.sdk.render(this.container.nativeElement);
   }
 
@@ -350,4 +350,4 @@ The core package includes comprehensive tests for all functionality. Use the san
 
 ## Related Packages
 
-- **[chekin-host-sdk-react](../react/README.md)** - React components and hooks built on this core package
+- **[chekin-guest-sdk-react](../react/README.md)** - React components and hooks built on this core package

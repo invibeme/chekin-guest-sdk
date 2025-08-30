@@ -649,7 +649,7 @@
     <!-- Load Chekin SDK dynamically -->
     <script type="module">
       // Dynamic SDK loading variables
-      let ChekinHostSDK, formatChekinUrl, ChekinLogger, CHEKIN_EVENTS;
+      let ChekinGuestSDK, formatChekinUrl, ChekinLogger, CHEKIN_EVENTS;
       let sdk = null;
       let logsContainer;
       let logger;
@@ -763,13 +763,13 @@
           } else {
             // NPM package
             const version = getNpmPackageVersion();
-            importUrl = `https://unpkg.com/chekin-host-sdk@${version}`;
+            importUrl = `https://unpkg.com/chekin-guest-sdk@${version}`;
           }
 
           log(`Loading SDK from: ${importUrl}`);
           
           const module = await import(importUrl);
-          ChekinHostSDK = module.ChekinHostSDK;
+          ChekinGuestSDK = module.ChekinGuestSDK;
           formatChekinUrl = module.formatChekinUrl;
           ChekinLogger = module.ChekinLogger;
           CHEKIN_EVENTS = module.CHEKIN_EVENTS;
@@ -993,7 +993,7 @@
           }
 
           // Load SDK if not already loaded or if source changed
-          if (!sdkLoaded || !ChekinHostSDK) {
+          if (!sdkLoaded || !ChekinGuestSDK) {
             await loadSDK();
           }
 
@@ -1014,7 +1014,7 @@
             log(`Callback - Stat account: ${JSON.stringify(data)}`);
 
           // Initialize the actual SDK
-          sdk = new ChekinHostSDK(config);
+          sdk = new ChekinGuestSDK(config);
 
           // Set up event listeners for all SDK events
           if (CHEKIN_EVENTS && Object.values) {

@@ -143,14 +143,14 @@ Following industry standards and semantic clarity, we're adopting singular namin
 
 **Before:**
 
-- Repository: `chekin-hosts-sdk`
+- Repository: `chekin-guests-sdk`
 - Package: `@chekin/hosts-sdk`
 - Directory: `apps/hosts-sdk/`
 
 **After:**
 
-- Repository: `chekin-host-sdk`
-- Package: `chekin-host-sdk`
+- Repository: `chekin-guest-sdk`
+- Package: `chekin-guest-sdk`
 - Directory: `apps/host-sdk/`
 
 **Reasoning:**
@@ -162,12 +162,12 @@ Following industry standards and semantic clarity, we're adopting singular namin
 
 ### Repository Structure
 
-**Separate SDK Monorepo: `chekin-host-sdk`**
+**Separate SDK Monorepo: `chekin-guest-sdk`**
 
 ```
-chekin-host-sdk/
+chekin-guest-sdk/
 ├── packages/
-│   ├── core/                        # chekin-host-sdk (framework-agnostic)
+│   ├── core/                        # chekin-guest-sdk (framework-agnostic)
 │   │   ├── src/
 │   │   │   ├── ChekinSDK.ts        # Main vanilla JS class
 │   │   │   ├── communication/       # postMessage handling
@@ -175,7 +175,7 @@ chekin-host-sdk/
 │   │   │   └── types/              # TypeScript definitions
 │   │   └── package.json
 │   │
-│   └── react/                       # chekin-host-sdk-react (future)
+│   └── react/                       # chekin-guest-sdk-react (future)
 │       ├── src/
 │       │   ├── components/         # InlineWidget, PopupWidget
 │       │   ├── hooks/              # useChekinEventListener, etc.
@@ -305,7 +305,7 @@ const devSdk = new ChekinSDK({
 
 **SDK vs Iframe Versioning**
 
-- **SDK Package Version**: `chekin-host-sdk@2.1.0` (independent semantic versioning)
+- **SDK Package Version**: `chekin-guest-sdk@2.1.0` (independent semantic versioning)
 - **Iframe App Version**: `v1.6.2` (deployed to CDN paths)
 - **Compatibility**: SDK includes compatibility matrix for supported iframe versions
 
@@ -415,7 +415,7 @@ export class ChekinSDK {
 
 ```javascript
 // Vanilla JavaScript
-import {ChekinSDK} from 'chekin-host-sdk';
+import {ChekinSDK} from 'chekin-guest-sdk';
 
 const sdk = new ChekinSDK({
   apiKey: 'your-api-key',
@@ -440,7 +440,7 @@ sdk.destroy();
 <!-- HTML Integration -->
 <div id="chekin-widget"></div>
 <script type="module">
-  import {ChekinSDK} from 'https://unpkg.com/chekin-host-sdk';
+  import {ChekinSDK} from 'https://unpkg.com/chekin-guest-sdk';
 
   const sdk = new ChekinSDK({
     apiKey: 'your-api-key',
@@ -753,7 +753,7 @@ export default defineConfig({
 ```json
 // packages/core/package.json
 {
-  "name": "chekin-host-sdk",
+  "name": "chekin-guest-sdk",
   "version": "1.0.0",
   "description": "Framework-agnostic Chekin SDK",
   "main": "./dist/index.js",
@@ -778,7 +778,7 @@ export default defineConfig({
 ```json
 // packages/react/package.json
 {
-  "name": "chekin-host-sdk-react",
+  "name": "chekin-guest-sdk-react",
   "version": "1.0.0",
   "description": "React components for Chekin SDK",
   "main": "./dist/index.js",
@@ -797,7 +797,7 @@ export default defineConfig({
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "chekin-host-sdk": "workspace:^"
+    "chekin-guest-sdk": "workspace:^"
   }
 }
 ```
