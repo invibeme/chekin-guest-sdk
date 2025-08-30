@@ -1,0 +1,49 @@
+{
+  "name": "chekin-guest-sdk-react",
+  "version": "1.0.0",
+  "description": "Chekin Guest SDK integration for React apps",
+  "author": "vlad-svr",
+  "license": "MIT",
+  "repository": "invibeme/chekin-guest-sdk",
+  "type": "module",
+  "private": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "chekin",
+    "sdk",
+    "react",
+    "guest",
+    "registration",
+    "checkin"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "nx build react"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "chekin-guest-sdk": ">=1.0.0"
+  },
+  "devDependencies": {
+    "tslib": "^2.3.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tsup": "^8.0.0"
+  }
+}

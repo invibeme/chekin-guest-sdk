@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chekin Guest SDK Sandbox</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .config-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      textarea {
+        height: 80px;
+        resize: vertical;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007cba;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+      button:hover {
+        background-color: #005a8a;
+      }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .status {
+        padding: 10px;
+        background-color: #e8f5e8;
+        border: 1px solid #4caf50;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+      .error {
+        background-color: #ffe8e8;
+        border-color: #f44336;
+      }
+      .logs {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+      }
+      #chekin-container {
+        width: 100%;
+        height: 600px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+
+        & > iframe {
+          width: 100%;
+          height: 500px;
+          border: none;
+        }
+      }
+      .url-preview {
+        background-color: #f0f8ff;
+        border: 1px solid #007cba;
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-family: monospace;
+        font-size: 12px;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Chekin Guest SDK Sandbox</h1>
+      <p>Test the guest SDK with configurable iframe source and parameters for guest registration and check-in.</p>
+
+      <div class="config-section">
+        <div>
+          <div class="form-group">
+            <label for="base-url">Iframe Base URL:</label>
+            <input
+              type="text"
+              id="base-url"
+              placeholder="e.g., https://cdn.chekin.com/guest-sdk/dev"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="api-key">API Key:</label>
+            <input
+              type="text"
+              id="api-key"
+              value="1082d95186767233dd02402093d8c0dfe32d549c1245da3abb0ea392c59d5139"
+              placeholder="Your API key"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="version">Version (optional):</label>
+            <input
+              type="text"
+              id="version"
+              placeholder="e.g., v1.2.3 or leave empty for latest"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mode">Mode:</label>
+            <select id="mode">
+              <option value="ALL" selected>ALL</option>
+              <option value="ONLY_GUEST_FORM">ONLY_GUEST_FORM</option>
+              <option value="ONLY_IV">ONLY_IV</option>
+              <option value="PROPERTY_LINK">PROPERTY_LINK</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="housing-id">Housing ID (optional):</label>
+            <input type="text" id="housing-id" placeholder="Housing identifier" />
+          </div>
+
+          <div class="form-group">
+            <label for="reservation-id">Reservation ID (optional):</label>
+            <input type="text" id="reservation-id" placeholder="Reservation identifier" />
+          </div>
+
+          <div class="form-group">
+            <label for="external-id">External ID (optional):</label>
+            <input
+              type="text"
+              id="external-id"
+              placeholder="External reservation identifier for PMS clients"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="default-language">Default Language (optional):</label>
+            <input type="text" id="default-language" placeholder="e.g., en, es, fr" />
+          </div>
+        </div>
+
+        <div>
+          <div class="form-group">
+            <label for="styles-link">Styles Link (optional):</label>
+            <input
+              type="text"
+              id="styles-link"
+              placeholder="https://example.com/styles.css"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="custom-styles">Custom Styles (optional):</label>
+            <textarea id="custom-styles" placeholder="CSS styles as string"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="auto-height">Auto Height:</label>
+            <select id="auto-height">
+              <option value="true" selected>True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="log-level">Log Level:</label>
+            <select id="log-level">
+              <option value="debug">Debug</option>
+              <option value="info" selected>Info</option>
+              <option value="warn">Warn</option>
+              <option value="error">Error</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Configuration Section -->
+      <div class="container">
+        <h3>Advanced Configuration</h3>
+
+        <div class="config-section">
+          <div>
+            <div class="form-group">
+              <label for="prefill-data">Prefill Data (JSON):</label>
+              <textarea
+                id="prefill-data"
+                placeholder='{"guestForm": {"name": "John", "surname": "Doe", "email": "john@example.com"}}'
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="enable-guests-removal">Enable Guests Removal:</label>
+              <select id="enable-guests-removal">
+                <option value="false" selected>False</option>
+                <option value="true">True</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="can-edit-reservation-details">Can Edit Reservation Details:</label>
+              <select id="can-edit-reservation-details">
+                <option value="true" selected>True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-group">
+              <label for="can-share-registration-link">Can Share Registration Link:</label>
+              <select id="can-share-registration-link">
+                <option value="false" selected>False</option>
+                <option value="true">True</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="enable-callbacks">Enable Event Callbacks:</label>
+              <select id="enable-callbacks">
+                <option value="true" selected>True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="url-preview" id="url-preview">Generated URL will appear here...</div>
+
+      <div class="controls">
+        <button id="init-btn">Initialize SDK</button>
+        <button id="destroy-btn" disabled>Destroy SDK</button>
+        <button id="nav-btn">Test Route Navigation</button>
+        <button id="clear-btn">Clear Logs</button>
+      </div>
+
+      <div class="status" id="status">Ready to initialize SDK</div>
+    </div>
+
+    <div class="container">
+      <h2>SDK Container</h2>
+      <div id="chekin-container">
+        <p style="text-align: center; margin-top: 50px; color: #666">
+          Configure settings above and click "Initialize SDK" to load the iframe
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>Event Logs</h2>
+      <div class="logs" id="logs">Logs will appear here...\n</div>
+    </div>
+
+    <script type="module">
+      import {
+        ChekinGuestSDK,
+        ChekinPro,
+        formatChekinUrl,
+        ChekinLogger,
+        CHEKIN_EVENTS,
+      } from './dist/index.js';
+
+      let sdk = null;
+      let logContainer = document.getElementById('logs');
+      let logger = new ChekinLogger({level: 'info'});
+
+      function log(message, type = 'info') {
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+        logContainer.textContent += logEntry;
+        logContainer.scrollTop = logContainer.scrollHeight;
+        console.log(`[Chekin SDK] ${message}`);
+      }
+
+      function updateStatus(message, isError = false) {
+        const statusEl = document.getElementById('status');
+        statusEl.textContent = message;
+        statusEl.className = isError ? 'status error' : 'status';
+      }
+
+      function updateUrlPreview() {
+        const baseUrl = document.getElementById('base-url').value;
+        const apiKey = document.getElementById('api-key').value;
+        const version = document.getElementById('version').value;
+        const mode = document.getElementById('mode').value;
+
+        try {
+          const config = {
+            apiKey,
+            baseUrl,
+            version: version || undefined,
+            mode: mode || 'ALL',
+          };
+
+          const urlResult = formatChekinUrl(config);
+          document.getElementById('url-preview').textContent = urlResult.url;
+        } catch (error) {
+          document.getElementById('url-preview').textContent = `Error: ${error.message}`;
+        }
+      }
+
+      // Update URL preview when inputs change
+      ['base-url', 'api-key', 'version', 'mode'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateUrlPreview);
+      });
+
+      // Initialize URL preview
+      updateUrlPreview();
+
+      async function initializeSDK() {
+        try {
+          const baseUrl = document.getElementById('base-url').value;
+          const apiKey = document.getElementById('api-key').value;
+          const version = document.getElementById('version').value;
+          const mode = document.getElementById('mode').value;
+          const stylesLink = document.getElementById('styles-link').value;
+          const customStyles = document.getElementById('custom-styles').value;
+          const logLevel = document.getElementById('log-level').value;
+          const housingId = document.getElementById('housing-id').value;
+          const reservationId = document.getElementById('reservation-id').value;
+          const externalId = document.getElementById('external-id').value;
+          const defaultLanguage = document.getElementById('default-language').value;
+          const autoHeight = document.getElementById('auto-height').value === 'true';
+          const prefillData = document.getElementById('prefill-data').value;
+          const enableGuestsRemoval = document.getElementById('enable-guests-removal').value === 'true';
+          const canEditReservationDetails = document.getElementById('can-edit-reservation-details').value === 'true';
+          const canShareRegistrationLink = document.getElementById('can-share-registration-link').value === 'true';
+          const enableCallbacks =
+            document.getElementById('enable-callbacks').value === 'true';
+
+          if (!apiKey) {
+            throw new Error('Base URL and API Key are required');
+          }
+
+          log('Initializing Chekin SDK...');
+          updateStatus('Initializing SDK...');
+
+          // Update logger level
+          logger = new ChekinLogger({level: logLevel});
+
+          // Create SDK configuration
+          const config = {
+            apiKey,
+            baseUrl,
+            autoHeight,
+            version: version || undefined,
+            mode: mode || 'ALL',
+            stylesLink: stylesLink || undefined,
+            styles: customStyles || undefined,
+            housingId: housingId || undefined,
+            reservationId: reservationId || undefined,
+            externalId: externalId || undefined,
+            defaultLanguage: defaultLanguage || undefined,
+            enableGuestsRemoval,
+            canEditReservationDetails,
+            canShareRegistrationLink,
+            disableLogging: false,
+          };
+
+          // Parse and add complex JSON configs
+          if (prefillData) {
+            try {
+              config.prefillData = JSON.parse(prefillData);
+            } catch (e) {
+              try {
+                config.prefillData = new Function('return ' + prefillData)();
+              } catch (e2) {
+                log(`Invalid format in prefillData: ${e2.message}`, 'warn');
+              }
+            }
+          }
+
+          // Add event callbacks if enabled
+          if (enableCallbacks) {
+            config.onError = error => log(`Callback - Error: ${error}`, 'error');
+            config.onHeightChanged = height =>
+              log(`Callback - Height changed: ${height}px`);
+            config.onConnectionError = error =>
+              log(`Callback - Connection error: ${error}`, 'error');
+            config.onGuestRegistered = guest => 
+              log(`Callback - Guest registered: ${JSON.stringify(guest)}`);
+            config.onAllGuestsRegistered = () =>
+              log(`Callback - All guests registered`);
+            config.onReservationFound = reservation =>
+              log(`Callback - Reservation found: ${JSON.stringify(reservation)}`);
+            config.onReservationFetched = result =>
+              log(`Callback - Reservation fetched: ${JSON.stringify(result)}`);
+            config.onIVFinished = result =>
+              log(`Callback - IV finished: ${JSON.stringify(result)}`);
+            config.onReservationCreated = reservation =>
+              log(`Callback - Reservation created: ${JSON.stringify(reservation)}`);
+            config.onReservationFoundFromHousing = reservation =>
+              log(`Callback - Reservation found from housing: ${JSON.stringify(reservation)}`);
+            config.onScreenChanged = (type, reservationId, meta) =>
+              log(`Callback - Screen changed: ${type}, reservation: ${reservationId}, meta: ${JSON.stringify(meta)}`);
+          }
+
+          // Initialize the actual SDK
+          sdk = new ChekinGuestSDK(config);
+
+          // Set up event listeners for all SDK events
+          Object.values(CHEKIN_EVENTS).forEach(eventType => {
+            sdk.on(eventType, data => {
+              switch (eventType) {
+                case CHEKIN_EVENTS.HEIGHT_CHANGED:
+                  log(`Height changed to: ${data}px`);
+                  break;
+                case CHEKIN_EVENTS.ROUTE_CHANGED:
+                  log(`Route changed to: ${data.route}`);
+                  break;
+                case CHEKIN_EVENTS.ERROR:
+                  log(`Error: ${JSON.stringify(data)}`, 'error');
+                  break;
+                case CHEKIN_EVENTS.CONNECTION_ERROR:
+                  log(`Connection error: ${data}`, 'error');
+                  break;
+                case CHEKIN_EVENTS.GUEST_REGISTERED:
+                  log(`Guest registered: ${JSON.stringify(data)}`);
+                  break;
+                case CHEKIN_EVENTS.ALL_GUESTS_REGISTERED:
+                  log(`All guests registered`);
+                  break;
+                case CHEKIN_EVENTS.RESERVATION_FOUND:
+                  log(`Reservation found: ${JSON.stringify(data)}`);
+                  break;
+                case CHEKIN_EVENTS.RESERVATION_FETCHED:
+                  log(`Reservation fetched: ${JSON.stringify(data)}`);
+                  break;
+                case CHEKIN_EVENTS.IV_FINISHED:
+                  log(`IV finished: ${JSON.stringify(data)}`);
+                  break;
+                case CHEKIN_EVENTS.RESERVATION_CREATED:
+                  log(`Reservation created: ${JSON.stringify(data)}`);
+                  break;
+                case CHEKIN_EVENTS.RESERVATION_FOUND_FROM_HOUSING:
+                  log(`Reservation found from housing: ${JSON.stringify(data)}`);
+                  break;
+                case CHEKIN_EVENTS.SCREEN_CHANGED:
+                  log(`Screen changed: ${JSON.stringify(data)}`);
+                  break;
+                default:
+                  log(`Event ${eventType}: ${JSON.stringify(data)}`, 'debug');
+              }
+            });
+          });
+
+          // Render the SDK
+          await sdk.render('chekin-container');
+
+          log(`SDK initialized successfully with base URL: ${baseUrl}`);
+          updateStatus('SDK initialized successfully');
+
+          document.getElementById('destroy-btn').disabled = false;
+        } catch (error) {
+          log(`Failed to initialize SDK: ${error.message}`, 'error');
+          updateStatus(`Error: ${error.message}`, true);
+        }
+      }
+
+      function destroySDK() {
+        if (sdk) {
+          sdk.destroy();
+          sdk = null;
+          document.getElementById('destroy-btn').disabled = true;
+          updateStatus('SDK destroyed');
+          log('SDK destroyed');
+        }
+      }
+
+      function testRouteNavigation() {
+        if (!sdk) {
+          log('SDK not initialized', 'warn');
+          return;
+        }
+
+        const routes = ['/guests', '/reservations', '/settings', '/'];
+        const randomRoute = routes[Math.floor(Math.random() * routes.length)];
+        sdk.navigateToRoute(randomRoute);
+        log(`Navigation requested to: ${randomRoute}`);
+      }
+
+      function clearLogs() {
+        logContainer.textContent = 'Logs cleared...\n';
+      }
+
+      // Set up event listeners for buttons
+      document.getElementById('init-btn').addEventListener('click', initializeSDK);
+      document.getElementById('destroy-btn').addEventListener('click', destroySDK);
+      document.getElementById('nav-btn').addEventListener('click', testRouteNavigation);
+      document.getElementById('clear-btn').addEventListener('click', clearLogs);
+    </script>
+  </body>
+</html>
