@@ -125,7 +125,7 @@ The component accepts all configuration options from the core SDK plus additiona
 | `apiKey`      | `string`        | ✅       | Your Chekin API key                    |
 | `className`   | `string`        | ❌       | CSS class for the container div        |
 | `style`       | `CSSProperties` | ❌       | Inline styles for the container div    |
-| ...SDK config | Various         | ❌       | All other props from `ChekinSDKConfig` |
+| ...SDK config | Various         | ❌       | All other props from `ChekinGuestSDKConfig` |
 
 **Core SDK Configuration Props:**
 
@@ -340,7 +340,7 @@ import type {
 } from 'chekin-guest-sdk-react';
 
 // All core SDK types are also re-exported
-import type {ChekinSDKConfig} from 'chekin-guest-sdk-react';
+import type {ChekinGuestSDKConfig} from 'chekin-guest-sdk-react';
 ```
 
 ## Browser Support

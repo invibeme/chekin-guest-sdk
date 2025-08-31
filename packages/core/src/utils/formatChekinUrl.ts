@@ -1,4 +1,4 @@
-import {ChekinGuestSDKConfig, ChekinSDKConfig} from '../types';
+import {ChekinGuestSDKConfig} from '../types';
 
 const VersionMapper = {
   latest: 'latest',
@@ -15,21 +15,13 @@ const getBaseUrl = (version = 'latest') => {
   return `https://cdn.chekin.com/guest-sdk/${normalizedVersion}/`;
 };
 
-const URL_LENGTH_LIMITS = {
-  IE: 2083,
-  SAFE_LIMIT: 2000,
-  EXTENDED_LIMIT: 8192,
-} as const;
-
 export interface UrlConfigResult {
   url: string;
-  postMessageConfig?: any;
+  postMessageConfig?: Partial<ChekinGuestSDKConfig>;
   isLengthLimited: boolean;
 }
 
-export function formatChekinUrl(
-  config: ChekinGuestSDKConfig | ChekinSDKConfig,
-): UrlConfigResult {
+export function formatChekinUrl(config: ChekinGuestSDKConfig): UrlConfigResult {
   const version = config.version || 'latest';
   const baseUrl = config.baseUrl || getBaseUrl(version);
 
@@ -42,6 +34,10 @@ export function formatChekinUrl(
     reservationId: config.reservationId,
     lang: config.defaultLanguage,
     autoHeight: config.autoHeight,
+    mode: config.mode,
+    enableGuestsRemoval: config.enableGuestsRemoval,
+    canEditReservationDetails: config.canEditReservationDetails,
+    canShareRegistrationLink: config.canShareRegistrationLink,
   };
 
   // Add essential parameters to URL
@@ -57,7 +53,7 @@ export function formatChekinUrl(
     }
   });
 
-  let postMessageConfig: any = {};
+  let postMessageConfig = {};
   let isLengthLimited = false;
 
   if (config.stylesLink) {
@@ -84,32 +80,11 @@ export function formatChekinUrl(
     }
   }
 
-  if ((config as any).payServicesConfig) {
-    postMessageConfig = {
-      ...postMessageConfig,
-      payServicesConfig: (config as any).payServicesConfig,
-    };
-    isLengthLimited = true;
+  if (config.prefillData) {
+    postMessageConfig = {...postMessageConfig, prefillData: config.prefillData};
   }
 
   const finalUrl = url.toString();
-
-  if (finalUrl.length > URL_LENGTH_LIMITS.SAFE_LIMIT) {
-    const minimalUrl = new URL(baseUrl);
-    minimalUrl.searchParams.set('apiKey', config.apiKey);
-
-    postMessageConfig = {
-      ...postMessageConfig,
-      reservationId: config.reservationId,
-      defaultLanguage: config.defaultLanguage,
-    };
-
-    return {
-      url: minimalUrl.toString(),
-      postMessageConfig,
-      isLengthLimited: true,
-    };
-  }
 
   return {
     url: finalUrl,

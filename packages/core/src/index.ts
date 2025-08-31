@@ -16,7 +16,6 @@ export {
 // Type definitions
 export type {
   ChekinGuestSDKConfig,
-  ChekinSDKConfig,
   ChekinMessage,
   ChekinEventCallback,
   PrefillData,

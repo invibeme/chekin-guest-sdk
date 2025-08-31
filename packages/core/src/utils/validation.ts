@@ -1,4 +1,5 @@
-import { ChekinGuestSDKConfig, ChekinSDKConfig } from '../types';
+import {ChekinGuestSDKConfig} from '../types';
+import {SDK_MODES, SUPPORTED_LANGUAGES} from '../constants';
 
 export interface ValidationError {
   field: string;
@@ -12,50 +13,8 @@ export interface ValidationResult {
   warnings: ValidationError[];
 }
 
-const SUPPORTED_LANGUAGES = [
-  'en',
-  'es',
-  'it',
-  'de',
-  'fr',
-  'hu',
-  'ru',
-  'cs',
-  'bg',
-  'pt',
-  'ro',
-  'et',
-  'pl',
-  'ca',
-] as const;
-
-const SUPPORTED_FEATURES = ['IV'] as const;
-
-const SUPPORTED_CURRENCIES = [
-  'USD',
-  'EUR',
-  'GBP',
-  'JPY',
-  'AUD',
-  'CAD',
-  'CHF',
-  'CNY',
-  'SEK',
-  'NZD',
-  'MXN',
-  'SGD',
-  'HKD',
-  'NOK',
-  'TRY',
-  'ZAR',
-  'BRL',
-  'INR',
-  'KRW',
-  'PLN',
-] as const;
-
 export class ChekinSDKValidator {
-  public validateConfig(config: ChekinGuestSDKConfig | ChekinSDKConfig): ValidationResult {
+  public validateConfig(config: ChekinGuestSDKConfig): ValidationResult {
     const errors: ValidationError[] = [];
     const warnings: ValidationError[] = [];
 
@@ -110,58 +69,21 @@ export class ChekinSDKValidator {
           value: config.version,
         });
       } else if (
-        !/^(latest|v?\d+\.\d+\.\d+(-[a-z0-9]+)?)$/i.test(config.version)
+        !/^(latest|development|v?\d+\.\d+\.\d+(-[a-z0-9]+)?)$/i.test(config.version)
       ) {
         warnings.push({
           field: 'version',
           message:
-            'Version format should be "latest" or semantic version (e.g., "1.0.0", "v2.1.3")',
+            'Version format should be "latest" or "development" or semantic version (e.g., "1.0.0", "v2.1.3")',
           value: config.version,
-        });
-      }
-    }
-
-    if ((config as any).features) {
-      if (!Array.isArray((config as any).features)) {
-        errors.push({
-          field: 'features',
-          message: 'Features must be an array',
-          value: (config as any).features,
-        });
-      } else {
-        (config as any).features.forEach((feature: any, index: any) => {
-          if (typeof feature !== 'string') {
-            errors.push({
-              field: `features[${index}]`,
-              message: 'Each feature must be a string',
-              value: feature,
-            });
-          } else if (
-            !SUPPORTED_FEATURES.includes(
-              feature as (typeof SUPPORTED_FEATURES)[number]
-            )
-          ) {
-            warnings.push({
-              field: `features[${index}]`,
-              message: `Unknown feature "${feature}". Supported features: ${SUPPORTED_FEATURES.join(
-                ', '
-              )}`,
-              value: feature,
-            });
-          }
         });
       }
     }
 
     // ID validation
     this.validateId(config.housingId, 'housingId', errors, warnings);
-    this.validateId(
-      (config as any).externalHousingId,
-      'externalHousingId',
-      errors,
-      warnings
-    );
     this.validateId(config.reservationId, 'reservationId', errors, warnings);
+    this.validateId(config.externalId, 'externalId', errors, warnings);
 
     // Language validation
     if (config.defaultLanguage) {
@@ -171,11 +93,7 @@ export class ChekinSDKValidator {
           message: 'Default language must be a string',
           value: config.defaultLanguage,
         });
-      } else if (
-        !SUPPORTED_LANGUAGES.includes(
-          config.defaultLanguage as (typeof SUPPORTED_LANGUAGES)[number]
-        )
-      ) {
+      } else if (!ChekinSDKValidator.validateLanguage(config.defaultLanguage)) {
         warnings.push({
           field: 'defaultLanguage',
           message: `Unsupported language "${
@@ -186,6 +104,7 @@ export class ChekinSDKValidator {
       }
     }
 
+    // Styles validation
     if (config.styles) {
       if (typeof config.styles !== 'string') {
         errors.push({
@@ -216,62 +135,59 @@ export class ChekinSDKValidator {
       }
     }
 
+    // Boolean validation
     this.validateBoolean(config.autoHeight, 'autoHeight', errors);
     this.validateBoolean(config.disableLogging, 'disableLogging', errors);
+    this.validateBoolean(config.enableGuestsRemoval, 'enableGuestsRemoval', errors);
+    this.validateBoolean(
+      config.canEditReservationDetails,
+      'canEditReservationDetails',
+      errors,
+    );
+    this.validateBoolean(
+      config.canShareRegistrationLink,
+      'canShareRegistrationLink',
+      errors,
+    );
+    this.validateBoolean(config.routeSync, 'routeSync', errors);
 
-    // Hidden form fields validation
-    if ((config as any).hiddenFormFields) {
-      this.validateHiddenFormFields((config as any).hiddenFormFields, errors, warnings);
-    }
-
-    // Hidden sections validation
-    if ((config as any).hiddenSections) {
-      if (!Array.isArray((config as any).hiddenSections)) {
+    // Mode validation
+    if (config.mode) {
+      if (typeof config.mode !== 'string') {
         errors.push({
-          field: 'hiddenSections',
-          message: 'Hidden sections must be an array',
-          value: (config as any).hiddenSections,
+          field: 'mode',
+          message: 'Mode must be a string',
+          value: config.mode,
         });
-      } else {
-        (config as any).hiddenSections.forEach((section: any, index: any) => {
-          if (typeof section !== 'string') {
-            errors.push({
-              field: `hiddenSections[${index}]`,
-              message: 'Each hidden section must be a string',
-              value: section,
-            });
-          }
+      } else if (!ChekinSDKValidator.validateMode(config.mode)) {
+        errors.push({
+          field: 'mode',
+          message: `Unsupported mode "${config.mode}". Supported modes: ${SDK_MODES.join(', ')}`,
+          value: config.mode,
         });
       }
     }
 
-    // Pay services config validation
-    if ((config as any).payServicesConfig) {
-      this.validatePayServicesConfig(
-        (config as any).payServicesConfig,
-        errors,
-        warnings
-      );
+    if (config.prefillData) {
+      this.validatePrefillData(config.prefillData, errors);
     }
 
     // Callback validation
+    this.validateCallback(config.onGuestRegistered, 'onGuestRegistered', errors);
+    this.validateCallback(config.onAllGuestsRegistered, 'onAllGuestsRegistered', errors);
+    this.validateCallback(config.onReservationFound, 'onReservationFound', errors);
+    this.validateCallback(config.onReservationFetched, 'onReservationFetched', errors);
+    this.validateCallback(config.onReservationCreated, 'onReservationCreated', errors);
+    this.validateCallback(
+      config.onReservationFoundFromHousing,
+      'onReservationFoundFromHousing',
+      errors,
+    );
     this.validateCallback(config.onHeightChanged, 'onHeightChanged', errors);
+    this.validateCallback(config.onConnectionError, 'onConnectionError', errors);
     this.validateCallback(config.onError, 'onError', errors);
-    this.validateCallback(
-      config.onConnectionError,
-      'onConnectionError',
-      errors
-    );
-    this.validateCallback(
-      (config as any).onPoliceAccountConnection,
-      'onPoliceAccountConnection',
-      errors
-    );
-    this.validateCallback(
-      (config as any).onStatAccountConnection,
-      'onStatAccountConnection',
-      errors
-    );
+    this.validateCallback(config.onIVFinished, 'onIVFinished', errors);
+    this.validateCallback(config.onScreenChanged, 'onScreenChanged', errors);
 
     return {
       isValid: errors.length === 0,
@@ -284,7 +200,7 @@ export class ChekinSDKValidator {
     value: unknown,
     fieldName: string,
     errors: ValidationError[],
-    warnings: ValidationError[]
+    warnings: ValidationError[],
   ): void {
     if (value !== undefined) {
       if (typeof value !== 'string') {
@@ -312,7 +228,7 @@ export class ChekinSDKValidator {
   private validateBoolean(
     value: unknown,
     fieldName: string,
-    errors: ValidationError[]
+    errors: ValidationError[],
   ): void {
     if (value !== undefined && typeof value !== 'boolean') {
       errors.push({
@@ -323,132 +239,21 @@ export class ChekinSDKValidator {
     }
   }
 
-  private validateHiddenFormFields(
-    hiddenFormFields: unknown,
-    errors: ValidationError[],
-    warnings: ValidationError[]
-  ): void {
-    if (typeof hiddenFormFields !== 'object' || hiddenFormFields === null) {
+  private validatePrefillData(prefillData: unknown, errors: ValidationError[]): void {
+    if (typeof prefillData !== 'object' || prefillData === null) {
       errors.push({
-        field: 'hiddenFormFields',
-        message: 'Hidden form fields must be an object',
-        value: hiddenFormFields,
+        field: 'prefillData',
+        message: 'Prefill data must be an object',
+        value: prefillData,
       });
       return;
-    }
-
-    const validSections = [
-      'housingInfo',
-      'housingPolice',
-      'housingStat',
-      'guestbookGeneration',
-    ];
-
-    Object.entries(hiddenFormFields).forEach(([section, fields]) => {
-      if (!validSections.includes(section)) {
-        warnings.push({
-          field: `hiddenFormFields.${section}`,
-          message: `Unknown section "${section}". Valid sections: ${validSections.join(
-            ', '
-          )}`,
-          value: section,
-        });
-      }
-
-      if (!Array.isArray(fields)) {
-        errors.push({
-          field: `hiddenFormFields.${section}`,
-          message: 'Hidden form fields section must be an array',
-          value: fields,
-        });
-      } else {
-        (fields as unknown[]).forEach((field, index) => {
-          if (typeof field !== 'string') {
-            errors.push({
-              field: `hiddenFormFields.${section}[${index}]`,
-              message: 'Each hidden field must be a string',
-              value: field,
-            });
-          }
-        });
-      }
-    });
-  }
-
-  private validatePayServicesConfig(
-    payConfig: any,
-    errors: ValidationError[],
-    warnings: ValidationError[]
-  ): void {
-    if (typeof payConfig !== 'object' || payConfig === null) {
-      errors.push({
-        field: 'payServicesConfig',
-        message: 'Pay services config must be an object',
-        value: payConfig,
-      });
-      return;
-    }
-
-    if (payConfig['currency']) {
-      if (typeof payConfig['currency'] !== 'string') {
-        errors.push({
-          field: 'payServicesConfig.currency',
-          message: 'Currency must be a string',
-          value: payConfig['currency'],
-        });
-      } else if (
-        !SUPPORTED_CURRENCIES.includes(
-          payConfig['currency'] as (typeof SUPPORTED_CURRENCIES)[number]
-        )
-      ) {
-        warnings.push({
-          field: 'payServicesConfig.currency',
-          message: `Unsupported currency "${
-            payConfig['currency']
-          }". Supported currencies: ${SUPPORTED_CURRENCIES.join(', ')}`,
-          value: payConfig['currency'],
-        });
-      }
-    }
-
-    if (payConfig['liveness']) {
-      if (
-        typeof payConfig['liveness'] !== 'object' ||
-        payConfig['liveness'] === null
-      ) {
-        errors.push({
-          field: 'payServicesConfig.liveness',
-          message: 'Liveness config must be an object',
-          value: payConfig['liveness'],
-        });
-      } else if (payConfig.liveness.price !== undefined) {
-        if (typeof payConfig.liveness.price !== 'number') {
-          errors.push({
-            field: 'payServicesConfig.liveness.price',
-            message: 'Liveness price must be a number',
-            value: payConfig.liveness.price,
-          });
-        } else if (payConfig.liveness.price < 0) {
-          errors.push({
-            field: 'payServicesConfig.liveness.price',
-            message: 'Liveness price cannot be negative',
-            value: payConfig.liveness.price,
-          });
-        } else if (payConfig.liveness.price > 10000) {
-          warnings.push({
-            field: 'payServicesConfig.liveness.price',
-            message: 'Liveness price seems unusually high',
-            value: payConfig.liveness.price,
-          });
-        }
-      }
     }
   }
 
   private validateCallback(
     callback: unknown,
     fieldName: string,
-    errors: ValidationError[]
+    errors: ValidationError[],
   ): void {
     if (callback !== undefined && typeof callback !== 'function') {
       errors.push({
@@ -459,35 +264,11 @@ export class ChekinSDKValidator {
     }
   }
 
-  // Quick validation methods for specific use cases
-  public static validateApiKey(apiKey: unknown): boolean {
-    return typeof apiKey === 'string' && apiKey.length >= 10;
-  }
-
-  public static validateUrl(url: string): boolean {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   public static validateLanguage(lang: string): boolean {
-    return SUPPORTED_LANGUAGES.includes(
-      lang as (typeof SUPPORTED_LANGUAGES)[number]
-    );
+    return SUPPORTED_LANGUAGES.includes(lang as (typeof SUPPORTED_LANGUAGES)[number]);
   }
 
-  public static validateFeature(feature: string): boolean {
-    return SUPPORTED_FEATURES.includes(
-      feature as (typeof SUPPORTED_FEATURES)[number]
-    );
-  }
-
-  public static validateCurrency(currency: string): boolean {
-    return SUPPORTED_CURRENCIES.includes(
-      currency as (typeof SUPPORTED_CURRENCIES)[number]
-    );
+  public static validateMode(mode: string): boolean {
+    return SDK_MODES.includes(mode as (typeof SDK_MODES)[number]);
   }
 }

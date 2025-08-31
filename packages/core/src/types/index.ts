@@ -1,4 +1,4 @@
-import {CHEKIN_EVENTS} from '../constants';
+import {CHEKIN_EVENTS, SDKModes, SupportedLanguage} from '../constants';
 
 export type UseOnScreenChanged<MetaData> = {
   type: 'PAYMENTS_CART' | 'ORDER_HISTORY';
@@ -168,24 +168,8 @@ export interface ChekinGuestSDKConfig {
   canEditReservationDetails?: boolean;
   canShareRegistrationLink?: boolean;
   autoHeight?: boolean;
-  mode?: 'ALL' | 'ONLY_GUEST_FORM' | 'ONLY_IV' | 'PROPERTY_LINK';
-  defaultLanguage?:
-    | 'en'
-    | 'es'
-    | 'el'
-    | 'uk'
-    | 'it'
-    | 'de'
-    | 'fr'
-    | 'hu'
-    | 'ru'
-    | 'cs'
-    | 'bg'
-    | 'pt'
-    | 'ro'
-    | 'et'
-    | 'pl'
-    | 'ca';
+  mode?: SDKModes;
+  defaultLanguage?: SupportedLanguage;
   styles?: string;
   stylesLink?: string;
   disableLogging?: boolean;
@@ -203,9 +187,6 @@ export interface ChekinGuestSDKConfig {
   onIVFinished?: (details: IdentityVerificationDetails) => void;
   onScreenChanged?: (data: UseOnScreenChanged<Record<string, unknown>>) => void;
 }
-
-// Legacy alias for backward compatibility
-export interface ChekinSDKConfig extends ChekinGuestSDKConfig {}
 
 export interface ChekinMessage {
   type: keyof typeof CHEKIN_EVENTS | string;

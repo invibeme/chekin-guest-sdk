@@ -76,7 +76,7 @@ Main SDK class providing:
 ### Constructor
 
 ```typescript
-new ChekinGuestSDK(config: ChekinSDKConfig & { logger?: ChekinLoggerConfig })
+new ChekinGuestSDK(config: ChekinGuestSDKConfig & { logger?: ChekinLoggerConfig })
 ```
 
 ### Methods
@@ -87,7 +87,7 @@ new ChekinGuestSDK(config: ChekinSDKConfig & { logger?: ChekinLoggerConfig })
 | ---------------- | ---------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------- |
 | **render**       | `container: string \| HTMLElement`             | `Promise<HTMLIFrameElement>` | Renders the SDK iframe into the specified container. Accepts element ID (string) or HTMLElement reference |
 | **destroy**      | -                                              | `void`                       | Destroys the SDK instance, removes iframe from DOM, and cleans up event listeners                         |
-| **updateConfig** | `newConfig: Partial<ChekinSDKConfig>`          | `void`                       | Updates SDK configuration and sends changes to iframe. Validates new config before applying               |
+| **updateConfig** | `newConfig: Partial<ChekinGuestSDKConfig>`          | `void`                       | Updates SDK configuration and sends changes to iframe. Validates new config before applying               |
 | **on**           | `event: string, callback: ChekinEventCallback` | `void`                       | Adds event listener for SDK events. Supports all SDK event types with type-safe callbacks                 |
 | **off**          | `event: string, callback: ChekinEventCallback` | `void`                       | Removes specific event listener. Must pass same callback reference used in `on()`                         |
 
@@ -97,7 +97,7 @@ new ChekinGuestSDK(config: ChekinSDKConfig & { logger?: ChekinLoggerConfig })
 
 - `render(container: string | HTMLElement): Promise<HTMLIFrameElement>`
 - `destroy(): void`
-- `updateConfig(newConfig: Partial<ChekinSDKConfig>): void`
+- `updateConfig(newConfig: Partial<ChekinGuestSDKConfig>): void`
 
 **Event Management**
 
@@ -139,7 +139,7 @@ new ChekinGuestSDK(config: ChekinSDKConfig & { logger?: ChekinLoggerConfig })
 #### Configuration Interface
 
 ```typescript
-interface ChekinSDKConfig {
+interface ChekinGuestSDKConfig {
   // Required
   apiKey: string;
 
