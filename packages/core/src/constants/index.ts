@@ -3,22 +3,23 @@ export const CHEKIN_IFRAME_TITLE = 'Chekin Guest SDK';
 export const CHEKIN_IFRAME_NAME = 'chekin-guest-sdk-frame';
 
 export const CHEKIN_EVENTS = {
-  HANDSHAKE: 'handshake',
-  HEIGHT_CHANGED: 'height-changed',
-  ERROR: 'error',
-  CONNECTION_ERROR: 'connection-error',
-  CONFIG_UPDATE: 'config-update',
-  ROUTE_CHANGED: 'route-changed',
-  INIT_ROUTE: 'init-route',
+  HANDSHAKE: 'chekin:handshake',
+  HEIGHT_CHANGED: 'chekin:height-changed',
+  ERROR: 'chekin:error',
+  CONNECTION_ERROR: 'chekin:connection-error',
+  CONFIG_UPDATE: 'chekin:config-update',
+  ROUTE_CHANGED: 'chekin:route-changed',
+  READY: 'chekin:ready',
+  INIT_ROUTE: 'chekin:init-route',
   // Guest-specific events
-  GUEST_REGISTERED: 'guest-registered',
-  ALL_GUESTS_REGISTERED: 'all-guests-registered',
-  RESERVATION_FOUND: 'reservation-found',
-  RESERVATION_FETCHED: 'reservation-fetched',
-  IV_FINISHED: 'iv-finished',
-  RESERVATION_CREATED: 'reservation-created',
-  RESERVATION_FOUND_FROM_HOUSING: 'reservation-found-from-housing', //
-  SCREEN_CHANGED: 'screen-changed',
+  GUEST_REGISTERED: 'chekin:guest-registered',
+  ALL_GUESTS_REGISTERED: 'chekin:all-guests-registered',
+  RESERVATION_FOUND: 'chekin:reservation-found',
+  RESERVATION_FETCHED: 'chekin:reservation-fetched',
+  IV_FINISHED: 'chekin:iv-finished',
+  RESERVATION_CREATED: 'chekin:reservation-created',
+  RESERVATION_FOUND_FROM_HOUSING: 'chekin:reservation-found-from-housing',
+  SCREEN_CHANGED: 'chekin:screen-changed',
 } as const;
 
 export const LOG_LEVELS = {
@@ -31,7 +32,7 @@ export const LOG_LEVELS = {
 export const SDK_MODE = {
   all: 'ALL',
   onlyGuestForm: 'ONLY_GUEST_FORM',
-  onlyIV: 'ONLY_IV',
+  onlyIV: 'IV_ONLY',
   propertyLink: 'PROPERTY_LINK',
 } as const;
 

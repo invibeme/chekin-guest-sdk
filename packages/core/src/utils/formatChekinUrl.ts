@@ -31,6 +31,7 @@ export function formatChekinUrl(config: ChekinGuestSDKConfig): UrlConfigResult {
     apiKey: config.apiKey,
     housingId: config.housingId,
     externalId: config.externalId,
+    guestId: config.guestId,
     reservationId: config.reservationId,
     lang: config.defaultLanguage,
     autoHeight: config.autoHeight,

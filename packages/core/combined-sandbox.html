@@ -203,7 +203,7 @@
       }
       #chekin-container {
         width: 100%;
-        height: 600px;
+        min-height: 600px;
         border: 2px solid #ddd;
         border-radius: 8px;
         overflow: hidden;
@@ -301,8 +301,9 @@
                 <select id="mode" name="mode">
                   <option value="">Default</option>
                   <option value="ALL">All</option>
-                  <option value="GUEST_REGISTRATION">Guest Registration</option>
-                  <option value="IDENTITY_VERIFICATION">Identity Verification</option>
+                  <option value="ONLY_GUEST_FORM">Only guest form</option>
+                  <option value="IV_ONLY">IV Only</option>
+                  <option value="PROPERTY_LINK">Property Link</option>
                 </select>
               </div>
             </div>
