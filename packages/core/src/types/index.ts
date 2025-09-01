@@ -163,6 +163,7 @@ export interface ChekinGuestSDKConfig {
   reservationId?: string;
   externalId?: string;
   housingId?: string;
+  guestId?: string;
   prefillData?: PrefillData;
   enableGuestsRemoval?: boolean;
   canEditReservationDetails?: boolean;

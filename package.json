@@ -1,7 +1,7 @@
 {
   "name": "chekin-guest-sdk",
   "version": "1.0.0",
-  "description": "Chekin Guest SDK - Framework-agnostic monorepo for guest registration and check-in SDK",
+  "description": "Chekin Guest SDK - Framework-agnostic SDK for integrating Chekin's guest registration platform into your applications",
   "author": "vlad-svr",
   "license": "MIT",
   "repository": "invibeme/chekin-guest-sdk",

@@ -1,5 +1,5 @@
 import {ChekinGuestSDKConfig} from '../types';
-import {SDK_MODES, SUPPORTED_LANGUAGES} from '../constants';
+import {SDK_MODES, SUPPORTED_LANGUAGES, SDK_MODE} from '../constants';
 
 export interface ValidationError {
   field: string;
@@ -84,6 +84,7 @@ export class ChekinSDKValidator {
     this.validateId(config.housingId, 'housingId', errors, warnings);
     this.validateId(config.reservationId, 'reservationId', errors, warnings);
     this.validateId(config.externalId, 'externalId', errors, warnings);
+    this.validateId(config.guestId, 'guestId', errors, warnings);
 
     // Language validation
     if (config.defaultLanguage) {
@@ -188,6 +189,39 @@ export class ChekinSDKValidator {
     this.validateCallback(config.onError, 'onError', errors);
     this.validateCallback(config.onIVFinished, 'onIVFinished', errors);
     this.validateCallback(config.onScreenChanged, 'onScreenChanged', errors);
+
+    // Business logic validation
+    if (config.guestId && config.mode !== SDK_MODE.onlyGuestForm) {
+      errors.push({
+        field: 'guestId',
+        message: 'The guestId can be used only in "ONLY_GUEST_FORM" mode',
+        value: config.guestId,
+      });
+    }
+
+    if (config.guestId && !config.externalId && !config.reservationId) {
+      errors.push({
+        field: 'guestId',
+        message: 'The guestId should be passed with reservationId or externalId',
+        value: config.guestId,
+      });
+    }
+
+    if (!config.housingId && config.mode === SDK_MODE.propertyLink) {
+      errors.push({
+        field: 'housingId',
+        message: 'The housingId is required in "PROPERTY_LINK" mode',
+        value: config.housingId,
+      });
+    }
+
+    if (config.housingId && config.mode !== SDK_MODE.propertyLink) {
+      errors.push({
+        field: 'housingId',
+        message: 'The housingId can be used only in "PROPERTY_LINK" mode',
+        value: config.housingId,
+      });
+    }
 
     return {
       isValid: errors.length === 0,

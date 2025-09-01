@@ -8,6 +8,7 @@ import {
   CHEKIN_EVENTS,
   CHEKIN_IFRAME_TITLE,
   CHEKIN_IFRAME_NAME,
+  SDK_MODE,
 } from './constants';
 
 export class ChekinGuestSDK {
@@ -24,7 +25,12 @@ export class ChekinGuestSDK {
       logger?: ChekinLoggerConfig;
     } = {} as ChekinGuestSDKConfig,
   ) {
-    this.config = config;
+    // Apply defaults
+    this.config = {
+      canEditReservationDetails: config.canEditReservationDetails ?? true,
+      mode: config.mode || SDK_MODE.all,
+      ...config,
+    };
 
     const loggerConfig: ChekinLoggerConfig = {
       enabled: !config.disableLogging,

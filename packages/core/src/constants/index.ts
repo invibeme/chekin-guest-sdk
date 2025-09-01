@@ -1,6 +1,6 @@
-export const CHEKIN_ROOT_IFRAME_ID = 'chekin-sdk-iframe';
-export const CHEKIN_IFRAME_TITLE = 'Chekin SDK';
-export const CHEKIN_IFRAME_NAME = 'chekin-sdk-frame';
+export const CHEKIN_ROOT_IFRAME_ID = 'chekin-guest-sdk-iframe';
+export const CHEKIN_IFRAME_TITLE = 'Chekin Guest SDK';
+export const CHEKIN_IFRAME_NAME = 'chekin-guest-sdk-frame';
 
 export const CHEKIN_EVENTS = {
   HANDSHAKE: 'handshake',
@@ -28,7 +28,14 @@ export const LOG_LEVELS = {
   ERROR: 'error',
 } as const;
 
-export const SDK_MODES = ['ALL', 'ONLY_GUEST_FORM', 'ONLY_IV', 'PROPERTY_LINK'] as const;
+export const SDK_MODE = {
+  all: 'ALL',
+  onlyGuestForm: 'ONLY_GUEST_FORM',
+  onlyIV: 'ONLY_IV',
+  propertyLink: 'PROPERTY_LINK',
+} as const;
+
+export const SDK_MODES = Object.values(SDK_MODE);
 export type SDKModes = (typeof SDK_MODES)[number];
 
 export const SUPPORTED_LANGUAGES = [

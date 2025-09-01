@@ -6,15 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="f8236fba-235e-46f8-bb1b-dbe99a6e09b0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/communication/ChekinCommunicator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/communication/ChekinCommunicator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/combined-sandbox.html" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/combined-sandbox.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/core/src/ChekinGuestSDK.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/ChekinGuestSDK.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/constants/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/constants/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/types/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/utils/ChekinLogger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/utils/ChekinLogger.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/core/src/utils/formatChekinUrl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/utils/formatChekinUrl.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/core/src/utils/validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/core/src/utils/validation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +29,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:invibeme/chekin-host-sdk.git&quot;,
+    &quot;url&quot;: &quot;git@github.com:invibeme/chekin-guest-sdk.git&quot;,
     &quot;accountId&quot;: &quot;796026ae-1cce-48ff-b0e6-2c4b96340739&quot;
   }
 }</component>
@@ -54,7 +51,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "com.codeium.enabled": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/v.sviridov/Job/Projects/chekin-guest-sdk",
+    "last_opened_file_path": "/Users/v.sviridov/Job/Projects/chekin-guest-sdk/packages/core/src/utils",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -67,6 +64,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/packages/core/src/utils" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/packages/core" />
       <recent name="$PROJECT_DIR$/main-app" />
@@ -111,6 +109,8 @@
       <workItem from="1756363579056" duration="4670000" />
       <workItem from="1756369086497" duration="14226000" />
       <workItem from="1756397961917" duration="42957000" />
+      <workItem from="1756704152169" duration="1053000" />
+      <workItem from="1756709556969" duration="10588000" />
     </task>
     <servers />
   </component>
