@@ -173,7 +173,7 @@ export interface ChekinGuestSDKConfig {
   defaultLanguage?: SupportedLanguage;
   styles?: string;
   stylesLink?: string;
-  disableLogging?: boolean;
+  enableLogging?: boolean;
   routeSync?: boolean;
   // Guest-specific event callbacks
   onGuestRegistered?: (guest: Guest) => void;

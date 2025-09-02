@@ -445,8 +445,8 @@
               </div>
               <div class="form-group">
                 <div class="checkbox-group">
-                  <input type="checkbox" id="disableLogging" name="disableLogging" />
-                  <label for="disableLogging">Disable Logging</label>
+                  <input type="checkbox" id="enableLogging" name="enableLogging" />
+                  <label for="enableLogging">Enable Logging</label>
                 </div>
               </div>
               <div class="form-group">
@@ -673,7 +673,7 @@
         guestId: '',
         defaultLanguage: '',
         autoHeight: true,
-        disableLogging: false,
+        enableLogging: false,
         routeSync: true,
         stylesLink: '',
         styles: '',
@@ -841,7 +841,7 @@
         // Handle checkboxes
         const checkboxes = [
           'autoHeight',
-          'disableLogging', 
+          'enableLogging', 
           'routeSync',
           'enableGuestsRemoval',
           'canEditReservationDetails',
@@ -1005,7 +1005,7 @@
           // Handle checkboxes
           const checkboxes = [
             'autoHeight',
-            'disableLogging',
+            'enableLogging',
             'routeSync',
             'enableGuestsRemoval',
             'canEditReservationDetails',

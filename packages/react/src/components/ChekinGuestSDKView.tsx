@@ -65,7 +65,7 @@ export const ChekinGuestSDKView = forwardRef<
     sdkConfig.defaultLanguage,
     sdkConfig.styles,
     sdkConfig.stylesLink,
-    sdkConfig.disableLogging,
+    sdkConfig.enableLogging,
   ]);
 
   return (

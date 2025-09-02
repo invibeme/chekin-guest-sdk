@@ -138,7 +138,7 @@ export class ChekinSDKValidator {
 
     // Boolean validation
     this.validateBoolean(config.autoHeight, 'autoHeight', errors);
-    this.validateBoolean(config.disableLogging, 'disableLogging', errors);
+    this.validateBoolean(config.enableLogging, 'enableLogging', errors);
     this.validateBoolean(config.enableGuestsRemoval, 'enableGuestsRemoval', errors);
     this.validateBoolean(
       config.canEditReservationDetails,
