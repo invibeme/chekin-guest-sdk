@@ -191,6 +191,13 @@ export class ChekinSDKValidator {
     this.validateCallback(config.onScreenChanged, 'onScreenChanged', errors);
 
     // Business logic validation
+    if (!config.reservationId && !config.housingId && !config.externalId) {
+      errors.push({
+        field: 'none',
+        message: 'At least one of reservationId, housingId, or externalId is required',
+        value: '',
+      });
+    }
     if (config.guestId && config.mode !== SDK_MODE.onlyGuestForm) {
       errors.push({
         field: 'guestId',
