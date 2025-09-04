@@ -379,78 +379,6 @@ function ChekinContainer() {
 }
 ```
 
-## New Features Available
-
-### 1. Enhanced Logging
-
-```javascript
-const sdk = new ChekinGuestSDK({
-  apiKey: 'your-api-key',
-  enableLogging: true, // Enable comprehensive logging
-  logger: {
-    level: 'debug', // debug, info, warn, error
-    remote: true, // Ship logs to Chekin for debugging
-  },
-});
-
-// Access logger
-const logger = sdk.getLogger();
-logger.info('Custom log message');
-```
-
-### 2. Route Synchronization
-
-```javascript
-// Enable automatic URL sync
-sdk.enableRouteSync({hashPrefix: 'chekin'});
-
-// Navigate programmatically
-sdk.navigate('/payments');
-
-// Get current route
-const currentRoute = sdk.getCurrentRoute();
-```
-
-### 3. Runtime Configuration Updates
-
-```javascript
-// Update configuration after initialization
-sdk.updateConfig({
-  reservationId: 'new-reservation-456',
-  mode: 'ONLY_GUEST_FORM',
-});
-```
-
-### 4. Event Listeners
-
-```javascript
-// Add custom event listeners
-sdk.on('chekin:guest-registered', guest => {
-  console.log('Custom listener:', guest);
-});
-
-// Remove listeners
-sdk.off('chekin:guest-registered', customHandler);
-```
-
-### 5. TypeScript Support
-
-```typescript
-import {ChekinGuestSDK, ChekinGuestSDKConfig} from '@chekinapp/guest-sdk';
-
-const config: ChekinGuestSDKConfig = {
-  apiKey: 'your-api-key',
-  reservationId: 'reservation-123',
-  mode: 'ALL', // Full type checking
-  onGuestRegistered: guest => {
-    // guest parameter is fully typed
-    console.log(guest.name, guest.surname);
-  },
-};
-
-const sdk = new ChekinGuestSDK(config);
-```
-
 ## Breaking Changes
 
 ### 1. Import Changes
@@ -526,13 +454,9 @@ if (!validation.isValid) {
 - [ ] Update TypeScript definitions if using TypeScript
 - [ ] Test in production environment
 
-## Support
+## Need Help?
 
-For migration assistance or issues:
-
-1. Check the [API documentation](./docs/)
-2. Review the [examples](./packages/core/sandbox.html)
-3. File issues on the project repository
-4. Contact Chekin support team
+- **GitHub Issues**: Report bugs or ask questions
+- **Support**: Contact the Chekin development team
 
 The new SDK maintains backward compatibility for most use cases, making migration straightforward while providing enhanced functionality and better developer experience.
