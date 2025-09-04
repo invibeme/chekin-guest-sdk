@@ -88,6 +88,9 @@ export class ChekinGuestSDK {
     this.logger.logConfigUpdate(config);
   }
 
+  /**
+   * @deprecated Use render() method instead
+   */
   public renderApp(options: {targetNode: string}): Promise<HTMLIFrameElement> {
     return this.render(options.targetNode);
   }
@@ -101,7 +104,7 @@ export class ChekinGuestSDK {
   ): Promise<HTMLIFrameElement> {
     const {targetNode, ...sdkConfig} = config;
     this.initialize(sdkConfig);
-    return this.renderApp({targetNode});
+    return this.render(targetNode);
   }
 
   public render(container: string | HTMLElement): Promise<HTMLIFrameElement> {

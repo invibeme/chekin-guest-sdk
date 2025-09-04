@@ -1,6 +1,6 @@
 # chekin-guest-sdk-react
 
-React components and hooks for integrating Chekin's host management platform into React applications. Built on top of the core `chekin-guest-sdk` package.
+React components and hooks for integrating Chekin's guest registration and check-in platform into React applications. Built on top of the core `chekin-guest-sdk` package.
 
 ## Overview
 
@@ -33,10 +33,12 @@ function MyComponent() {
   return (
     <ChekinGuestSDKView
       apiKey="your-api-key"
-      features={['reservations', 'guests']}
+      reservationId="reservation-123"
+      mode="ALL"
       autoHeight={true}
       onHeightChanged={height => console.log('Height:', height)}
       onError={error => console.error('SDK Error:', error)}
+      onGuestRegistered={guest => console.log('Guest registered:', guest)}
     />
   );
 }
@@ -56,7 +58,10 @@ function MyComponent() {
     // Access the underlying SDK instance
     const sdk = sdkRef.current?.sdk;
     if (sdk) {
-      sdk.updateConfig({ features: ['reservations', 'guests', 'payments'] });
+      sdk.updateConfig({ 
+        reservationId: 'new-reservation-456',
+        enableLogging: true 
+      });
     }
   };
 
@@ -66,7 +71,8 @@ function MyComponent() {
       <ChekinGuestSDKView
         ref={sdkRef}
         apiKey="your-api-key"
-        features={['reservations']}
+        reservationId="reservation-123"
+        mode="ALL"
         className="my-sdk-container"
         style={{ minHeight: '400px', border: '1px solid #ccc' }}
       />
@@ -94,16 +100,20 @@ function MyComponent() {
       console.error('Connection Error:', error);
       // Handle network issues
     },
-    onPoliceAccountConnection: data => {
-      console.log('Police account connected:', data);
+    onGuestRegistered: guest => {
+      console.log('Guest registered:', guest.name, guest.surname);
     },
-    onStatAccountConnection: data => {
-      console.log('Statistics account connected:', data);
+    onAllGuestsRegistered: () => {
+      console.log('All guests registered');
     },
   });
 
   return (
-    <ChekinGuestSDKView apiKey="your-api-key" features={['reservations', 'guests']} />
+    <ChekinGuestSDKView 
+      apiKey="your-api-key" 
+      reservationId="reservation-123"
+      mode="ALL"
+    />
   );
 }
 ```
@@ -131,26 +141,35 @@ The component accepts all configuration options from the core SDK plus additiona
 
 - `baseUrl` - Custom base URL for SDK hosting
 - `version` - Pin to specific SDK version
-- `features` - Array of enabled features
-- `housingId` - Pre-select specific housing
-- `externalHousingId` - External housing ID for PMS integrations
+- `mode` - SDK mode: 'ALL', 'ONLY_GUEST_FORM', 'IV_ONLY', 'PROPERTY_LINK'
 - `reservationId` - Pre-load specific reservation
+- `externalId` - External ID for PMS integrations
+- `guestId` - Specific guest ID (ONLY_GUEST_FORM mode only)
+- `housingId` - Pre-select specific housing (PROPERTY_LINK mode only)
 - `defaultLanguage` - Default interface language
 - `styles` - Custom CSS styles as string
 - `stylesLink` - URL to external stylesheet
 - `autoHeight` - Auto-adjust iframe height
 - `enableLogging` - Enable SDK logging (disabled by default)
-- `hiddenSections` - Hide specific sections
-- `hiddenFormFields` - Hide specific form fields
-- `payServicesConfig` - Payment services configuration
+- `prefillData` - Pre-fill guest form data
+- `enableGuestsRemoval` - Allow guests to be removed
+- `canEditReservationDetails` - Allow editing reservation details
+- `canShareRegistrationLink` - Enable sharing registration links
+- `routeSync` - Enable URL synchronization
 
 **Event Callbacks:**
 
 - `onHeightChanged` - Callback for height changes
 - `onError` - Error callback
 - `onConnectionError` - Connection error callback
-- `onPoliceAccountConnection` - Police account connection callback
-- `onStatAccountConnection` - Statistics account connection callback
+- `onGuestRegistered` - Guest registration callback
+- `onAllGuestsRegistered` - All guests registered callback
+- `onReservationFound` - Reservation loaded callback
+- `onReservationFetched` - Reservation fetch completed callback
+- `onReservationCreated` - New reservation created callback
+- `onReservationFoundFromHousing` - Reservation found via housing callback
+- `onIVFinished` - Identity verification completed callback
+- `onScreenChanged` - Screen/route changed callback
 
 #### ChekinGuestSDKViewHandle
 
@@ -170,12 +189,18 @@ A React hook for listening to SDK events with automatic cleanup.
 #### Parameters
 
 ```typescript
-interface HostSDKEventCallbacks {
+interface GuestSDKEventCallbacks {
   onHeightChanged?: (height: number) => void;
   onError?: (error: {message: string; code?: string}) => void;
   onConnectionError?: (error: any) => void;
-  onPoliceAccountConnection?: (data: any) => void;
-  onStatAccountConnection?: (data: any) => void;
+  onGuestRegistered?: (guest: Guest) => void;
+  onAllGuestsRegistered?: () => void;
+  onReservationFound?: () => void;
+  onReservationFetched?: (data: {isSuccess: boolean}) => void;
+  onReservationCreated?: (reservation: {id: string}) => void;
+  onReservationFoundFromHousing?: (reservation: {id: string}) => void;
+  onIVFinished?: (details: IdentityVerificationDetails) => void;
+  onScreenChanged?: (data: any) => void;
 }
 ```
 
@@ -188,6 +213,9 @@ useGuestSDKEventListener({
   },
   onError: error => {
     // Handle errors
+  },
+  onGuestRegistered: guest => {
+    // Handle guest registration
   },
   // ... other callbacks
 });
@@ -218,7 +246,8 @@ function StyledSDK() {
   return (
     <ChekinGuestSDKView
       apiKey="your-api-key"
-      features={['reservations', 'guests']}
+      reservationId="reservation-123"
+      mode="ALL"
       styles={customStyles}
       className="custom-sdk-wrapper"
       style={{
@@ -240,41 +269,45 @@ import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
 import type { ChekinGuestSDKViewHandle } from 'chekin-guest-sdk-react';
 
 function DynamicSDK() {
-  const [selectedFeatures, setSelectedFeatures] = useState(['reservations']);
-  const [currentHousing, setCurrentHousing] = useState('');
+  const [selectedMode, setSelectedMode] = useState('ALL');
+  const [currentReservation, setCurrentReservation] = useState('');
   const sdkRef = useRef<ChekinGuestSDKViewHandle>(null);
 
-  const updateFeatures = (features: string[]) => {
-    setSelectedFeatures(features);
+  const updateMode = (mode: string) => {
+    setSelectedMode(mode);
     // Update the SDK configuration
-    sdkRef.current?.sdk?.updateConfig({ features });
+    sdkRef.current?.sdk?.updateConfig({ mode });
   };
 
-  const selectHousing = (housingId: string) => {
-    setCurrentHousing(housingId);
-    sdkRef.current?.sdk?.updateConfig({ housingId });
+  const selectReservation = (reservationId: string) => {
+    setCurrentReservation(reservationId);
+    sdkRef.current?.sdk?.updateConfig({ reservationId });
   };
 
   return (
     <div>
       <div className="controls">
-        <button onClick={() => updateFeatures(['reservations', 'guests'])}>
-          Enable Guests
+        <button onClick={() => updateMode('ALL')}>
+          Full Mode
         </button>
-        <button onClick={() => updateFeatures(['reservations', 'payments'])}>
-          Enable Payments
+        <button onClick={() => updateMode('ONLY_GUEST_FORM')}>
+          Guest Form Only
         </button>
-        <button onClick={() => selectHousing('housing-123')}>
-          Select Housing
+        <button onClick={() => updateMode('PROPERTY_LINK')}>
+          Property Link Mode
+        </button>
+        <button onClick={() => selectReservation('reservation-123')}>
+          Load Reservation
         </button>
       </div>
 
       <ChekinGuestSDKView
         ref={sdkRef}
         apiKey="your-api-key"
-        features={selectedFeatures}
-        housingId={currentHousing}
+        mode={selectedMode}
+        reservationId={currentReservation}
         autoHeight={true}
+        enableLogging={true}
       />
     </div>
   );
@@ -288,7 +321,7 @@ import {useState} from 'react';
 import {ChekinGuestSDKView, useGuestSDKEventListener} from 'chekin-guest-sdk-react';
 
 function SDKWithErrorHandling() {
-  const [error, setError] = (useState < string) | (null > null);
+  const [error, setError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(true);
 
   useGuestSDKEventListener({
@@ -323,7 +356,97 @@ function SDKWithErrorHandling() {
   }
 
   return (
-    <ChekinGuestSDKView apiKey="your-api-key" features={['reservations', 'guests']} />
+    <ChekinGuestSDKView 
+      apiKey="your-api-key" 
+      reservationId="reservation-123"
+      mode="ALL"
+    />
+  );
+}
+```
+
+### Multiple SDK Modes
+
+```jsx
+import { useState } from 'react';
+import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
+
+function MultiModeSDK() {
+  const [activeMode, setActiveMode] = useState('property-selection');
+
+  const renderSDK = () => {
+    switch (activeMode) {
+      case 'property-selection':
+        return (
+          <ChekinGuestSDKView
+            apiKey="your-api-key"
+            mode="PROPERTY_LINK"
+            housingId="housing-123"
+            onReservationFoundFromHousing={(reservation) => {
+              console.log('Found reservation:', reservation);
+              setActiveMode('guest-form');
+            }}
+          />
+        );
+      
+      case 'guest-form':
+        return (
+          <ChekinGuestSDKView
+            apiKey="your-api-key"
+            mode="ONLY_GUEST_FORM"
+            reservationId="reservation-123"
+            onAllGuestsRegistered={() => {
+              console.log('All guests registered');
+              setActiveMode('verification');
+            }}
+          />
+        );
+      
+      case 'verification':
+        return (
+          <ChekinGuestSDKView
+            apiKey="your-api-key"
+            mode="IV_ONLY"
+            reservationId="reservation-123"
+            onIVFinished={(results) => {
+              console.log('Verification completed:', results);
+              setActiveMode('complete');
+            }}
+          />
+        );
+      
+      case 'complete':
+        return (
+          <div className="completion-message">
+            <h2>Check-in Complete!</h2>
+            <p>Thank you for completing your registration.</p>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="multi-mode-sdk">
+      <div className="progress-indicator">
+        <span className={activeMode === 'property-selection' ? 'active' : ''}>
+          Property Selection
+        </span>
+        <span className={activeMode === 'guest-form' ? 'active' : ''}>
+          Guest Registration
+        </span>
+        <span className={activeMode === 'verification' ? 'active' : ''}>
+          ID Verification
+        </span>
+        <span className={activeMode === 'complete' ? 'active' : ''}>
+          Complete
+        </span>
+      </div>
+      
+      {renderSDK()}
+    </div>
   );
 }
 ```
@@ -336,7 +459,7 @@ This package is built with TypeScript and provides comprehensive type definition
 import type {
   ChekinGuestSDKViewProps,
   ChekinGuestSDKViewHandle,
-  HostSDKEventCallbacks,
+  GuestSDKEventCallbacks,
 } from 'chekin-guest-sdk-react';
 
 // All core SDK types are also re-exported
@@ -369,6 +492,7 @@ This package requires:
 
 - `react` >= 16.8.0
 - `react-dom` >= 16.8.0
+- `chekin-guest-sdk` >= 1.0.0
 
 ## Related Packages
 

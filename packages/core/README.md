@@ -1,10 +1,12 @@
 # chekin-guest-sdk (Core Package)
 
-The core framework-agnostic SDK package for integrating Chekin's host management platform into web applications through secure iframe embedding.
+The core framework-agnostic SDK package for integrating Chekin's guest registration and check-in platform into web applications through secure iframe embedding.
 
 ## Overview
 
 This package provides the foundational `ChekinGuestSDK` class that can be used in any JavaScript/TypeScript environment, regardless of framework. It handles iframe creation, secure communication via postMessage, configuration validation, and comprehensive logging.
+
+> **Migrating from ChekinPro?** See our comprehensive [Migration Guide](../../MIGRATION_GUIDE.md) for step-by-step instructions to upgrade from the legacy ChekinPro SDK.
 
 ## Key Features
 
@@ -29,9 +31,11 @@ import {ChekinGuestSDK} from 'chekin-guest-sdk';
 
 const sdk = new ChekinGuestSDK({
   apiKey: 'your-api-key',
-  features: ['IV', 'LIVENESS_DETECTION'],
+  reservationId: 'reservation-123',
+  mode: 'ALL',
   autoHeight: true,
   onHeightChanged: height => console.log(`Height: ${height}px`),
+  onGuestRegistered: guest => console.log('Guest registered:', guest),
 });
 
 // Render into a DOM element
@@ -86,23 +90,13 @@ new ChekinGuestSDK(config: ChekinGuestSDKConfig & { logger?: ChekinLoggerConfig 
 | Method           | Parameters                                     | Returns                      | Description                                                                                               |
 | ---------------- | ---------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------- |
 | **render**       | `container: string \| HTMLElement`             | `Promise<HTMLIFrameElement>` | Renders the SDK iframe into the specified container. Accepts element ID (string) or HTMLElement reference |
-| **destroy**      | -                                              | `void`                       | Destroys the SDK instance, removes iframe from DOM, and cleans up event listeners                         |
-| **updateConfig** | `newConfig: Partial<ChekinGuestSDKConfig>`          | `void`                       | Updates SDK configuration and sends changes to iframe. Validates new config before applying               |
-| **on**           | `event: string, callback: ChekinEventCallback` | `void`                       | Adds event listener for SDK events. Supports all SDK event types with type-safe callbacks                 |
-| **off**          | `event: string, callback: ChekinEventCallback` | `void`                       | Removes specific event listener. Must pass same callback reference used in `on()`                         |
-
-#### Method Categories
-
-**Core Methods**
-
-- `render(container: string | HTMLElement): Promise<HTMLIFrameElement>`
-- `destroy(): void`
-- `updateConfig(newConfig: Partial<ChekinGuestSDKConfig>): void`
-
-**Event Management**
-
-- `on(event: string, callback: ChekinEventCallback): void`
-- `off(event: string, callback: ChekinEventCallback): void`
+| **initialize**   | `config: ChekinGuestSDKConfig`                 | `void`                       | Initialize/update SDK configuration                                                                       |
+| **initAndRender** | `config & {targetNode: string}`               | `Promise<HTMLIFrameElement>` | Initialize and render in one call (backward compatibility)                                               |
+| **destroy**      | -                                              | `void`                       | Destroys the SDK instance, removes iframe from DOM, and cleans up event listeners                        |
+| **unmount**      | -                                              | `void`                       | Legacy method, same as destroy()                                                                          |
+| **updateConfig** | `newConfig: Partial<ChekinGuestSDKConfig>`     | `void`                       | Updates SDK configuration and sends changes to iframe. Validates new config before applying              |
+| **on**           | `event: string, callback: ChekinEventCallback` | `void`                       | Adds event listener for SDK events. Supports all SDK event types with type-safe callbacks               |
+| **off**          | `event: string, callback: ChekinEventCallback` | `void`                       | Removes specific event listener. Must pass same callback reference used in `on()`                       |
 
 ### Configuration
 
@@ -110,31 +104,36 @@ new ChekinGuestSDK(config: ChekinGuestSDKConfig & { logger?: ChekinLoggerConfig 
 
 | Parameter                                | Type                                                                               | Required | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | ---------------------------------------- | ---------------------------------------------------------------------------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **apiKey**                               | `string`                                                                           | ✅       | -       | API key created in the Chekin dashboard.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| **features**                             | `string[]`                                                                         | ❌       | `[]`    | Enable specific SDK features: `['reservations', 'guests', 'documents', 'payments', 'messaging']`                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| **housingId**                            | `string`                                                                           | ❌       | -       | ID of the particular housing/property to pre-select. If this param or externalHousingId is passed then the properties list will be unavailable. You will get directly to the property setting view. Make sure that you have generated a correct apiKey for your usage                                                                                                                                                                                                                                                        |
-| **externalHousingId**                    | `string`                                                                           | ❌       | -       | External housing ID for PMS integrations and third-party systems. Note, if you pass externalHousingId and housingId then the housingId will have more priority and externalHousingId will be ignored. Make sure that you have generated a correct apiKey for your usage                                                                                                                                                                                                                                                      |
+| **apiKey**                               | `string`                                                                           | ✅       | -       | API key created in the Chekin dashboard                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **mode**                                 | `string`                                                                           | ❌       | `'ALL'` | SDK mode: `'ALL'` (full functionality), `'ONLY_GUEST_FORM'` (guest registration only), `'IV_ONLY'` (identity verification only), `'PROPERTY_LINK'` (property selection)                                                                                                                                                                                                                                                                                                                                                  |
 | **reservationId**                        | `string`                                                                           | ❌       | -       | ID of specific reservation to pre-load in the SDK                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **defaultLanguage**                      | `string`                                                                           | ❌       | `'en'`  | Default interface language. Supported: `'en', 'es', 'it', 'pt', 'de', 'fr'`                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **externalId**                           | `string`                                                                           | ❌       | -       | External ID for PMS integrations. If both reservationId and externalId are provided, externalId takes priority                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **guestId**                              | `string`                                                                           | ❌       | -       | Specific guest ID. Can only be used in 'ONLY_GUEST_FORM' mode with reservationId or externalId                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **housingId**                            | `string`                                                                           | ❌       | -       | ID of the particular housing/property. Required for 'PROPERTY_LINK' mode only                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **baseUrl**                              | `string`                                                                           | ❌       | -       | Custom base URL for SDK hosting (for self-hosted deployments)                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **version**                              | `string`                                                                           | ❌       | -       | Pin to specific SDK version (e.g., '1.6.2'). If not provided, uses latest version                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **defaultLanguage**                      | `string`                                                                           | ❌       | `'en'`  | Default interface language. Supported: `'en', 'es', 'el', 'uk', 'it', 'de', 'fr', 'hu', 'ru', 'cs', 'bg', 'pt', 'ro', 'et', 'pl', 'ca'`                                                                                                                                                                                                                                                                                                                                                                                    |
 | **styles**                               | `string`                                                                           | ❌       | -       | CSS styles injected into the SDK iframe for custom theming                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | **stylesLink**                           | `string`                                                                           | ❌       | -       | URL to external CSS stylesheet for advanced customization                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | **autoHeight**                           | `boolean`                                                                          | ❌       | `true`  | Automatically adjust iframe height based on content                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | **enableLogging**                        | `boolean`                                                                          | ❌       | `false` | Enable SDK internal logging (logs are disabled by default)                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| **hiddenSections**                       | `'housing_police', 'housing_stat', 'housing_documents', 'identity_verification'[]` | ❌       | `[]`    | Hide entire sections by name (e.g., `['housing_police', 'housing_stat', 'housing_documents', 'identity_verification']`)                                                                                                                                                                                                                                                                                                                                                                                                      |
-| **hiddenFormFields**                     | `object`                                                                           | ❌       | `{}`    | Hide specific form fields by section                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **hiddenFormFields.housingInfo**         | `string[]`                                                                         | ❌       | `[]`    | Hide housing information form fields                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **hiddenFormFields.housingPolice**       | `string[]`                                                                         | ❌       | `[]`    | Hide police registration form fields                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **hiddenFormFields.housingStat**         | `string[]`                                                                         | ❌       | `[]`    | Hide statistics form fields                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| **hiddenFormFields.guestbookGeneration** | `string[]`                                                                         | ❌       | `[]`    | Hide guestbook generation form fields                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| **payServicesConfig**                    | `object`                                                                           | ❌       | `{}`    | Payment services configuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| **payServicesConfig.currency**           | `string`                                                                           | ❌       | -       | Currency code for payment services (e.g., 'EUR', 'USD')                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| **payServicesConfig.liveness**           | `object`                                                                           | ❌       | `{}`    | Liveness detection configuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| **payServicesConfig.liveness.price**     | `number`                                                                           | ❌       | -       | Price for liveness detection service                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **prefillData**                          | `object`                                                                           | ❌       | -       | Pre-fill guest form data to reduce manual entry                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **prefillData.guestForm**                | `object`                                                                           | ❌       | -       | Guest form pre-fill data (name, surname, email, etc.)                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **enableGuestsRemoval**                  | `boolean`                                                                          | ❌       | `false` | Allow guests to be removed from reservations                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **canEditReservationDetails**            | `boolean`                                                                          | ❌       | `true`  | Allow editing of reservation details                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **canShareRegistrationLink**             | `boolean`                                                                          | ❌       | `false` | Enable sharing of registration links                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **routeSync**                            | `boolean`                                                                          | ❌       | `false` | Enable URL synchronization between parent and iframe                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | **onHeightChanged**                      | `function`                                                                         | ❌       | -       | Callback when iframe height changes. Receives `(height: number)`                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | **onError**                              | `function`                                                                         | ❌       | -       | Error callback. Receives `(error: { message: string; code?: string })`                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | **onConnectionError**                    | `function`                                                                         | ❌       | -       | Connection/network error callback. Receives `(error: any)`                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| **onPoliceAccountConnection**            | `function`                                                                         | ❌       | -       | This callback will be called with the following arguments: 1. state, possible values: - CONNECTED - If the police feature is activated/connected. Also it will be called if police type is changed. It’s like reconnection to a new police account. - DISCONNECTED - if the police feature is deactivated/disconnected. - CONNECTION_ERROR - if there is an error with the connection. - DISCONNECTION_ERROR - if there is an error with the disconnection. - CONNECTION_VALIDATION_FAILED - if there is a validation error. |
-| **onStatAccountConnection**              | `function`                                                                         | ❌       | -       | This callback will be called with the following arguments: 1. state, possible values: - CONNECTED - If the stat feature is activated/connected. Also it will be called if stat type is changed. It’s like reconnection to a new stat account. - DISCONNECTED - if the stat feature is deactivated/disconnected. - CONNECTION_ERROR - if there is an error with the connection. - DISCONNECTION_ERROR - if there is an error with the disconnection. - CONNECTION_VALIDATION_FAILED - if there is a validation error.         |
+| **onGuestRegistered**                    | `function`                                                                         | ❌       | -       | Callback when a guest completes registration. Receives guest data object                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **onAllGuestsRegistered**                | `function`                                                                         | ❌       | -       | Callback when all guests in a reservation complete registration                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **onReservationFound**                   | `function`                                                                         | ❌       | -       | Callback when a reservation is successfully loaded                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **onReservationFetched**                 | `function`                                                                         | ❌       | -       | Callback when reservation fetch completes (success or failure). Receives {isSuccess: boolean}                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| **onReservationCreated**                 | `function`                                                                         | ❌       | -       | Callback when a new reservation is created. Receives reservation object with ID                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **onReservationFoundFromHousing**       | `function`                                                                         | ❌       | -       | Callback when reservation is found via housing search. Receives reservation object                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **onIVFinished**                         | `function`                                                                         | ❌       | -       | Callback when identity verification completes. Receives verification results                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **onScreenChanged**                      | `function`                                                                         | ❌       | -       | Callback when screen/route changes in SDK. Receives screen information                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 #### Configuration Interface
 
@@ -146,39 +145,49 @@ interface ChekinGuestSDKConfig {
   // Optional Core Settings
   baseUrl?: string;
   version?: string;
-  features?: string[];
+  mode?: 'ALL' | 'ONLY_GUEST_FORM' | 'IV_ONLY' | 'PROPERTY_LINK';
 
   // Context
-  housingId?: string;
-  externalHousingId?: string;
   reservationId?: string;
+  externalId?: string;
+  housingId?: string;
+  guestId?: string;
   defaultLanguage?: string;
 
   // UI Customization
   styles?: string;
   stylesLink?: string;
   autoHeight?: boolean;
-  hiddenSections?: string[];
-  hiddenFormFields?: {
-    housingInfo?: string[];
-    housingPolice?: string[];
-    housingStat?: string[];
-    guestbookGeneration?: string[];
+  prefillData?: {
+    guestForm?: {
+      name?: string;
+      surname?: string;
+      email?: string;
+      // ... other guest form fields
+    };
   };
+
+  // Features
+  enableGuestsRemoval?: boolean;
+  canEditReservationDetails?: boolean;
+  canShareRegistrationLink?: boolean;
+  routeSync?: boolean;
 
   // Advanced
   enableLogging?: boolean;
-  payServicesConfig?: {
-    currency?: string;
-    liveness?: {price?: number};
-  };
 
   // Event Callbacks
   onHeightChanged?: (height: number) => void;
   onError?: (error: {message: string; code?: string}) => void;
   onConnectionError?: (error: any) => void;
-  onPoliceAccountConnection?: (data: any) => void;
-  onStatAccountConnection?: (data: any) => void;
+  onGuestRegistered?: (guest: Guest) => void;
+  onAllGuestsRegistered?: () => void;
+  onReservationFound?: () => void;
+  onReservationFetched?: (data: {isSuccess: boolean}) => void;
+  onReservationCreated?: (reservation: {id: string}) => void;
+  onReservationFoundFromHousing?: (reservation: {id: string}) => void;
+  onIVFinished?: (details: IdentityVerificationDetails) => void;
+  onScreenChanged?: (data: any) => void;
 }
 ```
 
@@ -189,8 +198,8 @@ interface ChekinGuestSDKConfig {
 ```javascript
 {
   apiKey: 'pk_live_your_api_key',
-  features: ['IV', 'LIVENESS_DETECTION'],
-  housingId: 'housing-123',
+  reservationId: 'reservation-123',
+  mode: 'ALL',
   defaultLanguage: 'en'
 }
 ```
@@ -201,26 +210,25 @@ interface ChekinGuestSDKConfig {
 {
   apiKey: 'pk_live_your_api_key',
   version: '1.6.2',
-  features: ['IV', 'LIVENESS_DETECTION'],
-  housingId: 'housing-123',
-  externalHousingId: 'pms-property-456',
+  reservationId: 'reservation-123',
+  mode: 'ALL',
   defaultLanguage: 'es',
   styles: `
     .primary-button { background: #007cba; }
     .container { max-width: 800px; }
   `,
   autoHeight: true,
-  hiddenSections: ['housing_police'],
-  hiddenFormFields: {
-    housingInfo: ['optional-field-1'],
-    housingPolice: ['non-required-field']
-  },
-  payServicesConfig: {
-    currency: 'EUR',
-    liveness: { price: 5.00 }
+  enableLogging: true,
+  prefillData: {
+    guestForm: {
+      name: 'John',
+      surname: 'Doe',
+      email: 'john@example.com'
+    }
   },
   onHeightChanged: (height) => console.log(`Height: ${height}px`),
-  onError: (error) => console.error('SDK Error:', error)
+  onError: (error) => console.error('SDK Error:', error),
+  onGuestRegistered: (guest) => console.log('Guest registered:', guest)
 }
 ```
 
@@ -228,24 +236,32 @@ interface ChekinGuestSDKConfig {
 
 The SDK emits the following events:
 
-- `height-changed` - Iframe content height changes
-- `error` - Error occurs in SDK or iframe
-- `connection-error` - Network or communication error
-- `police-account-connection` - Police account status change
-- `stat-account-connection` - Statistics account status change
+- `chekin:height-changed` - Iframe content height changes
+- `chekin:error` - Error occurs in SDK or iframe
+- `chekin:connection-error` - Network or communication error
+- `chekin:guest-registered` - Guest completes registration
+- `chekin:all-guests-registered` - All guests complete registration
+- `chekin:reservation-found` - Reservation successfully loaded
+- `chekin:reservation-fetched` - Reservation fetch completes
+- `chekin:iv-finished` - Identity verification completes
+- `chekin:screen-changed` - Screen/route changes
 
 ## Advanced Usage
 
 ### Custom Event Handling
 
 ```javascript
-sdk.on('height-changed', height => {
+sdk.on('chekin:height-changed', height => {
   document.getElementById('container').style.height = `${height}px`;
 });
 
-sdk.on('error', error => {
+sdk.on('chekin:error', error => {
   console.error('SDK Error:', error.message);
   // Handle error appropriately
+});
+
+sdk.on('chekin:guest-registered', guest => {
+  console.log('Guest registered:', guest.name, guest.surname);
 });
 ```
 
@@ -254,8 +270,9 @@ sdk.on('error', error => {
 ```javascript
 // Update configuration after initialization
 sdk.updateConfig({
-  features: ['IV', 'LIVENESS_DETECTION'],
+  reservationId: 'new-reservation-456',
   styles: 'body { background: #f5f5f5; }',
+  enableLogging: true
 });
 ```
 
@@ -266,7 +283,11 @@ sdk.updateConfig({
 ```html
 <div id="chekin-container"></div>
 <script>
-  const sdk = new ChekinGuestSDK({apiKey: 'your-key'});
+  const sdk = new ChekinGuestSDK({
+    apiKey: 'your-key',
+    reservationId: 'reservation-123',
+    mode: 'ALL'
+  });
   sdk.render('chekin-container');
 </script>
 ```
@@ -283,7 +304,11 @@ import {ChekinGuestSDK} from 'chekin-guest-sdk';
 
 export default {
   mounted() {
-    this.sdk = new ChekinGuestSDK({apiKey: 'your-key'});
+    this.sdk = new ChekinGuestSDK({
+      apiKey: 'your-key',
+      reservationId: 'reservation-123',
+      mode: 'ALL'
+    });
     this.sdk.render(this.$refs.container);
   },
   beforeUnmount() {
@@ -307,7 +332,11 @@ export class ChekinComponent implements OnInit, OnDestroy {
   private sdk!: ChekinGuestSDK;
 
   ngOnInit() {
-    this.sdk = new ChekinGuestSDK({apiKey: 'your-key'});
+    this.sdk = new ChekinGuestSDK({
+      apiKey: 'your-key',
+      reservationId: 'reservation-123',
+      mode: 'ALL'
+    });
     this.sdk.render(this.container.nativeElement);
   }
 
