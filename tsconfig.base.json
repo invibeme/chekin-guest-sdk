@@ -14,8 +14,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "chekin-guest-sdk": ["packages/core/src/index.ts"],
-      "chekin-guest-sdk-react": ["packages/react/src/index.ts"]
+      "@chekinapp/guest-sdk": ["packages/core/src/index.ts"],
+      "@chekinapp/guest-sdk-react": ["packages/react/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,5 +1,5 @@
 import {useEffect, useRef} from 'react';
-import {CHEKIN_EVENTS, ChekinGuestSDKConfig} from 'chekin-guest-sdk';
+import {CHEKIN_EVENTS, ChekinGuestSDKConfig} from '@chekinapp/guest-sdk';
 
 export interface GuestSDKEventCallbacks
   extends Pick<
@@ -47,7 +47,7 @@ export function useGuestSDKEventListener(eventHandlers: GuestSDKEventCallbacks) 
           callbacksRef.current.onAllGuestsRegistered?.();
           break;
         case CHEKIN_EVENTS.RESERVATION_FOUND:
-          callbacksRef.current.onReservationFound?.(payload);
+          callbacksRef.current.onReservationFound?.();
           break;
         case CHEKIN_EVENTS.RESERVATION_FETCHED:
           callbacksRef.current.onReservationFetched?.(payload);
@@ -63,7 +63,7 @@ export function useGuestSDKEventListener(eventHandlers: GuestSDKEventCallbacks) 
           break;
         case CHEKIN_EVENTS.SCREEN_CHANGED:
           if (payload && callbacksRef.current.onScreenChanged) {
-            callbacksRef.current.onScreenChanged(payload.type, payload.reservationId, payload.meta);
+            callbacksRef.current.onScreenChanged(payload);
           }
           break;
       }

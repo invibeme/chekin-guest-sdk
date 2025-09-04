@@ -1,5 +1,5 @@
 {
-  "name": "chekin-guest-sdk",
+  "name": "@chekinapp/guest-sdk",
   "version": "1.0.0",
   "description": "Chekin Guest SDK - Framework-agnostic SDK for integrating Chekin's guest registration platform into your applications",
   "author": "vlad-svr",

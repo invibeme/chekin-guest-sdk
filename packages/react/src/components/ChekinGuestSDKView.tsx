@@ -1,5 +1,5 @@
 import {useEffect, useRef, useImperativeHandle, forwardRef, CSSProperties} from 'react';
-import {ChekinGuestSDK, ChekinGuestSDKConfig} from 'chekin-guest-sdk';
+import {ChekinGuestSDK, ChekinGuestSDKConfig} from '@chekinapp/guest-sdk';
 
 export interface ChekinGuestSDKViewProps extends ChekinGuestSDKConfig {
   className?: string;

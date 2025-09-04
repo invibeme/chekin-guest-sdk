@@ -207,7 +207,7 @@ export class ChekinGuestSDK {
   private observeContainerRemoval(container: HTMLElement): void {
     this.observer?.disconnect();
     this.observer = new MutationObserver(() => {
-      if (!document.getElementById(container.id)) {
+      if (!document.body.contains(container)) {
         this.destroy();
       }
     });

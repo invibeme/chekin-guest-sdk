@@ -11,16 +11,16 @@ This is the **Chekin Guest SDK** repository - a framework-agnostic monorepo for 
 The project is a **Nx-based monorepo** with the following structure:
 
 ```
-chekin-guest-sdk/
+@chekinapp/guest-sdk/
 ├── packages/
-│   ├── core/                    # chekin-guest-sdk (vanilla JS/TS, framework-agnostic)
+│   ├── core/                    # @chekinapp/guest-sdk (vanilla JS/TS, framework-agnostic)
 │   │   ├── src/
 │   │   │   ├── ChekinGuestSDK.ts       # Main SDK class
 │   │   │   ├── communication/          # postMessage handling
 │   │   │   ├── utils/                  # Utilities (URL formatting, logging, validation)
 │   │   │   └── types/                  # TypeScript definitions
 │   │   └── sandbox.html               # Development sandbox
-│   └── react/                   # chekin-guest-sdk-react (React components)
+│   └── react/                   # @chekinapp/guest-sdk-react (React components)
 │       ├── src/components/             # ChekinGuestSDKView
 │       └── src/hooks/                  # useGuestSDKEventListener
 ├── docs/                        # API documentation
@@ -102,7 +102,7 @@ Main SDK class providing:
 ### Basic Initialization
 
 ```typescript
-import {ChekinGuestSDK} from 'chekin-guest-sdk';
+import {ChekinGuestSDK} from '@chekinapp/guest-sdk';
 
 const sdk = new ChekinGuestSDK({
   apiKey: 'your-api-key',
@@ -119,7 +119,7 @@ await sdk.render('container-element');
 ### React Integration
 
 ```jsx
-import {ChekinGuestSDKView} from 'chekin-guest-sdk-react';
+import {ChekinGuestSDKView} from '@chekinapp/guest-sdk-react';
 
 <ChekinGuestSDKView
   apiKey="your-api-key"

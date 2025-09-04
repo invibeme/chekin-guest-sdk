@@ -18,10 +18,10 @@ A modern, framework-agnostic SDK for integrating Chekin's guest registration pla
 
 ```bash
 # For vanilla JavaScript/TypeScript
-npm install chekin-guest-sdk
+npm install @chekinapp/guest-sdk
 
 # For React applications - NOT READY YET (In development)
-# npm install chekin-guest-sdk-react
+# npm install @chekinapp/guest-sdk-react
 ```
 
 ### Basic Usage
@@ -29,7 +29,7 @@ npm install chekin-guest-sdk
 #### Vanilla JavaScript
 
 ```javascript
-import {ChekinGuestSDK} from 'chekin-guest-sdk';
+import {ChekinGuestSDK} from '@chekinapp/guest-sdk';
 
 const sdk = new ChekinGuestSDK({
   apiKey: 'your-api-key',
@@ -49,7 +49,7 @@ sdk.render('chekin-container').then(() => {
 
 ```jsx
 // Coming soon - React package is in development
-import {ChekinGuestSDKView} from 'chekin-guest-sdk-react';
+import {ChekinGuestSDKView} from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   return (
@@ -68,7 +68,7 @@ function MyComponent() {
 
 ```jsx
 // Coming soon - React package is in development
-import {useGuestSDKEventListener, ChekinGuestSDKView} from 'chekin-guest-sdk-react';
+import {useGuestSDKEventListener, ChekinGuestSDKView} from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   useGuestSDKEventListener({
@@ -77,8 +77,8 @@ function MyComponent() {
   });
 
   return (
-    <ChekinGuestSDKView 
-      apiKey="your-api-key" 
+    <ChekinGuestSDKView
+      apiKey="your-api-key"
       reservationId="reservation-123"
       mode="ALL"
     />
@@ -90,8 +90,8 @@ function MyComponent() {
 
 This repository contains multiple packages:
 
-- **[`chekin-guest-sdk`](./packages/core/README.md)** - Core framework-agnostic SDK (Ready for production)
-- **[`chekin-guest-sdk-react`](./packages/react/README.md)** - React components and hooks (🚧 In development)
+- **[`@chekinapp/guest-sdk`](./packages/core/README.md)** - Core framework-agnostic SDK (Ready for production)
+- **[`@chekinapp/guest-sdk-react`](./packages/react/README.md)** - React components and hooks (🚧 In development)
 - **`apps/guest-sdk`** - Iframe application (deployed to CDN)
 
 ## Architecture
@@ -162,7 +162,7 @@ sdk.on('chekin:error', error => {
   console.error('SDK Error:', error.message);
 });
 
-sdk.on('chekin:guest-registered', (guest) => {
+sdk.on('chekin:guest-registered', guest => {
   console.log('Guest registered:', guest);
 });
 ```
@@ -178,8 +178,8 @@ The main React component that embeds the SDK directly in your application:
 ```jsx
 // Coming soon - React package is in development
 import { useRef } from 'react';
-import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
-import type { ChekinGuestSDKViewHandle } from 'chekin-guest-sdk-react';
+import { ChekinGuestSDKView } from '@chekinapp/guest-sdk-react';
+import type { ChekinGuestSDKViewHandle } from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   const sdkRef = useRef<ChekinGuestSDKViewHandle>(null);
@@ -208,7 +208,7 @@ Listen to SDK events with automatic cleanup:
 
 ```jsx
 // Coming soon - React package is in development
-import {useGuestSDKEventListener} from 'chekin-guest-sdk-react';
+import {useGuestSDKEventListener} from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   useGuestSDKEventListener({
@@ -230,8 +230,8 @@ function MyComponent() {
   });
 
   return (
-    <ChekinGuestSDKView 
-      apiKey="your-api-key" 
+    <ChekinGuestSDKView
+      apiKey="your-api-key"
       reservationId="reservation-123"
       mode="ALL"
     />
@@ -260,8 +260,8 @@ connect-src https://api.chekin.com;
 ### Setup
 
 ```bash
-git clone https://github.com/chekin/chekin-guest-sdk.git
-cd chekin-guest-sdk
+git clone https://github.com/chekin/@chekinapp/guest-sdk.git
+cd @chekinapp/guest-sdk
 npm install
 ```
 
@@ -328,4 +328,4 @@ MIT License - see [LICENSE](./LICENSE) file for details.
 ## Support
 
 - 📧 Email: support@chekin.com
-- 🐛 Issues: https://github.com/invibeme/chekin-guest-sdk/issues
+- 🐛 Issues: https://github.com/invibeme/@chekinapp/guest-sdk/issues

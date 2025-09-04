@@ -235,7 +235,12 @@
               </div>
               <div class="form-group">
                 <label for="npmVersion">NPM Package Version</label>
-                <select id="npmVersion" name="npmVersion" onchange="updateSDKUrl()" disabled>
+                <select
+                  id="npmVersion"
+                  name="npmVersion"
+                  onchange="updateSDKUrl()"
+                  disabled
+                >
                   <option value="latest" selected>Latest</option>
                   <option value="beta">Beta</option>
                   <option value="custom">Custom Version</option>
@@ -417,7 +422,9 @@
                       id="canEditReservationDetails"
                       name="canEditReservationDetails"
                     />
-                    <label for="canEditReservationDetails">Can Edit Reservation Details</label>
+                    <label for="canEditReservationDetails"
+                      >Can Edit Reservation Details</label
+                    >
                   </div>
                   <div class="checkbox-group">
                     <input
@@ -425,13 +432,14 @@
                       id="canShareRegistrationLink"
                       name="canShareRegistrationLink"
                     />
-                    <label for="canShareRegistrationLink">Can Share Registration Link</label>
+                    <label for="canShareRegistrationLink"
+                      >Can Share Registration Link</label
+                    >
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
 
           <!-- Behavior Configuration -->
           <div class="section">
@@ -464,15 +472,29 @@
             <p>The following events will be logged when they occur:</p>
             <ul>
               <li><strong>onGuestRegistered</strong> - When a guest is registered</li>
-              <li><strong>onAllGuestsRegistered</strong> - When all guests are registered</li>
+              <li>
+                <strong>onAllGuestsRegistered</strong> - When all guests are registered
+              </li>
               <li><strong>onReservationFound</strong> - When a reservation is found</li>
-              <li><strong>onReservationFetched</strong> - When reservation data is fetched</li>
-              <li><strong>onReservationCreated</strong> - When a reservation is created</li>
-              <li><strong>onReservationFoundFromHousing</strong> - When reservation is found from housing</li>
-              <li><strong>onHeightChanged</strong> - Height changes (when autoHeight is enabled)</li>
+              <li>
+                <strong>onReservationFetched</strong> - When reservation data is fetched
+              </li>
+              <li>
+                <strong>onReservationCreated</strong> - When a reservation is created
+              </li>
+              <li>
+                <strong>onReservationFoundFromHousing</strong> - When reservation is found
+                from housing
+              </li>
+              <li>
+                <strong>onHeightChanged</strong> - Height changes (when autoHeight is
+                enabled)
+              </li>
               <li><strong>onConnectionError</strong> - Connection errors</li>
               <li><strong>onError</strong> - SDK errors</li>
-              <li><strong>onIVFinished</strong> - When identity verification is finished</li>
+              <li>
+                <strong>onIVFinished</strong> - When identity verification is finished
+              </li>
               <li><strong>onScreenChanged</strong> - When screen/route changes</li>
             </ul>
           </div>
@@ -717,11 +739,11 @@
           } else {
             // NPM package
             const version = getNpmPackageVersion();
-            importUrl = `https://unpkg.com/chekin-guest-sdk@${version}`;
+            importUrl = `https://unpkg.com/@chekinapp/guest-sdk@${version}`;
           }
 
           log(`Loading SDK from: ${importUrl}`);
-          
+
           const module = await import(importUrl);
           ChekinGuestSDK = module.ChekinGuestSDK;
           formatChekinUrl = module.formatChekinUrl;
@@ -746,7 +768,7 @@
         }
       }
 
-      window.updateSDKSource = function() {
+      window.updateSDKSource = function () {
         const sdkSourceSelect = document.getElementById('sdkSource');
         const npmVersionSelect = document.getElementById('npmVersion');
         const customNpmVersionInput = document.getElementById('customNpmVersion');
@@ -841,17 +863,15 @@
         // Handle checkboxes
         const checkboxes = [
           'autoHeight',
-          'enableLogging', 
+          'enableLogging',
           'routeSync',
           'enableGuestsRemoval',
           'canEditReservationDetails',
-          'canShareRegistrationLink'
+          'canShareRegistrationLink',
         ];
         checkboxes.forEach(name => {
           data[name] = document.getElementById(name).checked;
         });
-
-
 
         // Handle JSON configurations
         if (data.prefillData) {
@@ -903,27 +923,26 @@
           logger = new ChekinLogger({level: config.logLevel || 'info'});
 
           // Add event callbacks
-          config.onGuestRegistered = guest => 
+          config.onGuestRegistered = guest =>
             log(`Callback - Guest registered: ${JSON.stringify(guest)}`);
-          config.onAllGuestsRegistered = () => 
-            log('Callback - All guests registered');
-          config.onReservationFound = () => 
-            log('Callback - Reservation found');
-          config.onReservationFetched = data => 
+          config.onAllGuestsRegistered = () => log('Callback - All guests registered');
+          config.onReservationFound = () => log('Callback - Reservation found');
+          config.onReservationFetched = data =>
             log(`Callback - Reservation fetched: ${JSON.stringify(data)}`);
-          config.onReservationCreated = reservation => 
+          config.onReservationCreated = reservation =>
             log(`Callback - Reservation created: ${JSON.stringify(reservation)}`);
-          config.onReservationFoundFromHousing = reservation => 
-            log(`Callback - Reservation found from housing: ${JSON.stringify(reservation)}`);
+          config.onReservationFoundFromHousing = reservation =>
+            log(
+              `Callback - Reservation found from housing: ${JSON.stringify(reservation)}`,
+            );
           config.onHeightChanged = height =>
             log(`Callback - Height changed: ${height}px`);
           config.onConnectionError = error =>
             log(`Callback - Connection error: ${error}`, 'error');
-          config.onError = error => 
-            log(`Callback - Error: ${error}`, 'error');
-          config.onIVFinished = details => 
+          config.onError = error => log(`Callback - Error: ${error}`, 'error');
+          config.onIVFinished = details =>
             log(`Callback - IV finished: ${JSON.stringify(details)}`);
-          config.onScreenChanged = data => 
+          config.onScreenChanged = data =>
             log(`Callback - Screen changed: ${JSON.stringify(data)}`);
 
           // Initialize the actual SDK

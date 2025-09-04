@@ -1,6 +1,6 @@
 {
-  "name": "chekin-guest-sdk",
-  "version": "0.1.2",
+  "name": "@chekinapp/guest-sdk",
+  "version": "0.1.0",
   "description": "Framework-agnostic Chekin SDK for guest registration and check-in",
   "author": "vlad-svr",
   "license": "MIT",

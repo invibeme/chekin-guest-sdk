@@ -2,13 +2,13 @@ import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
 import {ChekinCommunicator} from '../ChekinCommunicator';
 import {CHEKIN_EVENTS} from '../../constants';
 import type {ChekinGuestSDKConfig, ChekinMessage} from '../../types';
-import {ChekinLogger} from 'chekin-guest-sdk';
+import {ChekinLogger} from '@chekinapp/guest-sdk';
 
 // Mock ChekinLogger
 vi.mock('../../utils/ChekinLogger');
 vi.mock('../../utils/packageInfo.js', () => ({
   PACKAGE_INFO: {
-    name: 'chekin-guest-sdk',
+    name: '@chekinapp/guest-sdk',
     version: '1.0.0',
   },
 }));
@@ -586,7 +586,7 @@ describe('ChekinCommunicator', () => {
             type: CHEKIN_EVENTS.HANDSHAKE,
             payload: {
               timestamp: mockTimestamp,
-              sdk: 'chekin-guest-sdk',
+              sdk: '@chekinapp/guest-sdk',
               version: '1.0.0',
               origin: 'https://example.com',
             },
@@ -598,7 +598,7 @@ describe('ChekinCommunicator', () => {
           'Handshake sent to iframe',
           expect.objectContaining({
             timestamp: mockTimestamp,
-            sdk: 'chekin-guest-sdk',
+            sdk: '@chekinapp/guest-sdk',
             version: '1.0.0',
             origin: 'https://example.com',
           }),

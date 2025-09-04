@@ -1,6 +1,6 @@
-# chekin-guest-sdk-react
+# @chekinapp/guest-sdk-react
 
-React components and hooks for integrating Chekin's guest registration and check-in platform into React applications. Built on top of the core `chekin-guest-sdk` package.
+React components and hooks for integrating Chekin's guest registration and check-in platform into React applications. Built on top of the core `@chekinapp/guest-sdk` package.
 
 ## Overview
 
@@ -17,17 +17,17 @@ This package provides React-specific components and hooks that make it easy to i
 ## Installation
 
 ```bash
-npm install chekin-guest-sdk-react
+npm install @chekinapp/guest-sdk-react
 ```
 
-**Note**: This package has peer dependencies on `react` and `react-dom` (>=16.8.0), and automatically includes the core `chekin-guest-sdk` package.
+**Note**: This package has peer dependencies on `react` and `react-dom` (>=16.8.0), and automatically includes the core `@chekinapp/guest-sdk` package.
 
 ## Quick Start
 
 ### Basic Component Usage
 
 ```jsx
-import {ChekinGuestSDKView} from 'chekin-guest-sdk-react';
+import {ChekinGuestSDKView} from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   return (
@@ -48,8 +48,8 @@ function MyComponent() {
 
 ```jsx
 import { useRef } from 'react';
-import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
-import type { ChekinGuestSDKViewHandle } from 'chekin-guest-sdk-react';
+import { ChekinGuestSDKView } from '@chekinapp/guest-sdk-react';
+import type { ChekinGuestSDKViewHandle } from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   const sdkRef = useRef<ChekinGuestSDKViewHandle>(null);
@@ -58,9 +58,9 @@ function MyComponent() {
     // Access the underlying SDK instance
     const sdk = sdkRef.current?.sdk;
     if (sdk) {
-      sdk.updateConfig({ 
+      sdk.updateConfig({
         reservationId: 'new-reservation-456',
-        enableLogging: true 
+        enableLogging: true
       });
     }
   };
@@ -84,7 +84,7 @@ function MyComponent() {
 ### Using Event Listener Hook
 
 ```jsx
-import {ChekinGuestSDKView, useGuestSDKEventListener} from 'chekin-guest-sdk-react';
+import {ChekinGuestSDKView, useGuestSDKEventListener} from '@chekinapp/guest-sdk-react';
 
 function MyComponent() {
   useGuestSDKEventListener({
@@ -109,8 +109,8 @@ function MyComponent() {
   });
 
   return (
-    <ChekinGuestSDKView 
-      apiKey="your-api-key" 
+    <ChekinGuestSDKView
+      apiKey="your-api-key"
       reservationId="reservation-123"
       mode="ALL"
     />
@@ -130,11 +130,11 @@ For a complete list of all configuration parameters with detailed descriptions, 
 
 The component accepts all configuration options from the core SDK plus additional React-specific props:
 
-| Prop          | Type            | Required | Description                            |
-| ------------- | --------------- | -------- | -------------------------------------- |
-| `apiKey`      | `string`        | ✅       | Your Chekin API key                    |
-| `className`   | `string`        | ❌       | CSS class for the container div        |
-| `style`       | `CSSProperties` | ❌       | Inline styles for the container div    |
+| Prop          | Type            | Required | Description                                 |
+| ------------- | --------------- | -------- | ------------------------------------------- |
+| `apiKey`      | `string`        | ✅       | Your Chekin API key                         |
+| `className`   | `string`        | ❌       | CSS class for the container div             |
+| `style`       | `CSSProperties` | ❌       | Inline styles for the container div         |
 | ...SDK config | Various         | ❌       | All other props from `ChekinGuestSDKConfig` |
 
 **Core SDK Configuration Props:**
@@ -228,7 +228,7 @@ useGuestSDKEventListener({
 ### Custom Styling
 
 ```jsx
-import {ChekinGuestSDKView} from 'chekin-guest-sdk-react';
+import {ChekinGuestSDKView} from '@chekinapp/guest-sdk-react';
 
 function StyledSDK() {
   const customStyles = `
@@ -265,8 +265,8 @@ function StyledSDK() {
 
 ```jsx
 import { useState, useRef } from 'react';
-import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
-import type { ChekinGuestSDKViewHandle } from 'chekin-guest-sdk-react';
+import { ChekinGuestSDKView } from '@chekinapp/guest-sdk-react';
+import type { ChekinGuestSDKViewHandle } from '@chekinapp/guest-sdk-react';
 
 function DynamicSDK() {
   const [selectedMode, setSelectedMode] = useState('ALL');
@@ -318,10 +318,10 @@ function DynamicSDK() {
 
 ```jsx
 import {useState} from 'react';
-import {ChekinGuestSDKView, useGuestSDKEventListener} from 'chekin-guest-sdk-react';
+import {ChekinGuestSDKView, useGuestSDKEventListener} from '@chekinapp/guest-sdk-react';
 
 function SDKWithErrorHandling() {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = (useState < string) | (null > null);
   const [isConnected, setIsConnected] = useState(true);
 
   useGuestSDKEventListener({
@@ -356,8 +356,8 @@ function SDKWithErrorHandling() {
   }
 
   return (
-    <ChekinGuestSDKView 
-      apiKey="your-api-key" 
+    <ChekinGuestSDKView
+      apiKey="your-api-key"
       reservationId="reservation-123"
       mode="ALL"
     />
@@ -368,8 +368,8 @@ function SDKWithErrorHandling() {
 ### Multiple SDK Modes
 
 ```jsx
-import { useState } from 'react';
-import { ChekinGuestSDKView } from 'chekin-guest-sdk-react';
+import {useState} from 'react';
+import {ChekinGuestSDKView} from '@chekinapp/guest-sdk-react';
 
 function MultiModeSDK() {
   const [activeMode, setActiveMode] = useState('property-selection');
@@ -382,13 +382,13 @@ function MultiModeSDK() {
             apiKey="your-api-key"
             mode="PROPERTY_LINK"
             housingId="housing-123"
-            onReservationFoundFromHousing={(reservation) => {
+            onReservationFoundFromHousing={reservation => {
               console.log('Found reservation:', reservation);
               setActiveMode('guest-form');
             }}
           />
         );
-      
+
       case 'guest-form':
         return (
           <ChekinGuestSDKView
@@ -401,20 +401,20 @@ function MultiModeSDK() {
             }}
           />
         );
-      
+
       case 'verification':
         return (
           <ChekinGuestSDKView
             apiKey="your-api-key"
             mode="IV_ONLY"
             reservationId="reservation-123"
-            onIVFinished={(results) => {
+            onIVFinished={results => {
               console.log('Verification completed:', results);
               setActiveMode('complete');
             }}
           />
         );
-      
+
       case 'complete':
         return (
           <div className="completion-message">
@@ -422,7 +422,7 @@ function MultiModeSDK() {
             <p>Thank you for completing your registration.</p>
           </div>
         );
-      
+
       default:
         return null;
     }
@@ -440,11 +440,9 @@ function MultiModeSDK() {
         <span className={activeMode === 'verification' ? 'active' : ''}>
           ID Verification
         </span>
-        <span className={activeMode === 'complete' ? 'active' : ''}>
-          Complete
-        </span>
+        <span className={activeMode === 'complete' ? 'active' : ''}>Complete</span>
       </div>
-      
+
       {renderSDK()}
     </div>
   );
@@ -460,10 +458,10 @@ import type {
   ChekinGuestSDKViewProps,
   ChekinGuestSDKViewHandle,
   GuestSDKEventCallbacks,
-} from 'chekin-guest-sdk-react';
+} from '@chekinapp/guest-sdk-react';
 
 // All core SDK types are also re-exported
-import type {ChekinGuestSDKConfig} from 'chekin-guest-sdk-react';
+import type {ChekinGuestSDKConfig} from '@chekinapp/guest-sdk-react';
 ```
 
 ## Browser Support
@@ -492,11 +490,11 @@ This package requires:
 
 - `react` >= 16.8.0
 - `react-dom` >= 16.8.0
-- `chekin-guest-sdk` >= 1.0.0
+- `@chekinapp/guest-sdk` >= 1.0.0
 
 ## Related Packages
 
-- **[chekin-guest-sdk](../core/README.md)** - Core framework-agnostic SDK that this package is built on
+- **[@chekinapp/guest-sdk](../core/README.md)** - Core framework-agnostic SDK that this package is built on
 
 ## License
 
