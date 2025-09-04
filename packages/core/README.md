@@ -6,7 +6,7 @@ The core framework-agnostic SDK package for integrating Chekin's guest registrat
 
 This package provides the foundational `ChekinGuestSDK` class that can be used in any JavaScript/TypeScript environment, regardless of framework. It handles iframe creation, secure communication via postMessage, configuration validation, and comprehensive logging.
 
-> **Migrating from ChekinPro?** See our comprehensive [Migration Guide](../../MIGRATION_GUIDE.md) for step-by-step instructions to upgrade from the legacy ChekinPro SDK.
+> **Migrating from ChekinPro?** See our comprehensive [Migration Guide](https://github.com/invibeme/chekin-guest-sdk/blob/main/MIGRATION_GUIDE.md) for step-by-step instructions to upgrade from the legacy ChekinPro SDK.
 
 ## Key Features
 
