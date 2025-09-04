@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Framework-agnostic Chekin SDK for guest registration and check-in",
   "author": "vlad-svr",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "repository": "invibeme/chekin-guest-sdk",
   "type": "module",
