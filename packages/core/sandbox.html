@@ -259,7 +259,8 @@
                 <label for="sdkVersion">SDK App Version</label>
                 <select id="sdkVersion" name="sdkVersion" onchange="updateSDKUrl()">
                   <option value="latest" selected>Latest Production</option>
-                  <option value="custom">Custom Version</option>
+                  <option value="custom">Custom Production Version</option>
+                  <option value="dev">Development(STG)</option>
                 </select>
               </div>
               <div class="form-group">
@@ -302,8 +303,7 @@
               <div class="form-group">
                 <label for="mode">SDK Mode</label>
                 <select id="mode" name="mode">
-                  <option value="">Default</option>
-                  <option value="ALL">All</option>
+                  <option value="ALL">All (Default)</option>
                   <option value="ONLY_GUEST_FORM">Only guest form</option>
                   <option value="IV_ONLY">IV Only</option>
                   <option value="PROPERTY_LINK">Property Link</option>
@@ -403,7 +403,7 @@
                 <textarea
                   id="prefillData"
                   name="prefillData"
-                  placeholder='{"guest": {"name": "John", "email": "john@example.com"}}'
+                  placeholder='{"guestForm": {"name": "John", "email": "john@example.com"}}'
                 ></textarea>
               </div>
             </div>
@@ -695,9 +695,9 @@
         sdkVersion: 'latest',
         customVersion: '',
         baseUrl: '',
-        apiKey: '1082d95186767233dd02402093d8c0dfe32d549c1245da3abb0ea392c59d5139',
-        mode: '',
-        reservationId: '',
+        apiKey: 'c927783d385607c345cd3efe92cc89754a7394f8462cfba3c744197a5cc68a55',
+        mode: 'ALL',
+        reservationId: 'd708b54621a14b228cd7c27a8c37b108',
         housingId: '',
         externalId: '',
         guestId: '',
@@ -769,6 +769,7 @@
           sdkLoaded = true;
           log(`SDK loaded successfully from ${sdkSource} source`);
         } catch (error) {
+          console.error(error);
           log(`Failed to load SDK: ${error.message}`, 'error');
           throw error;
         }
@@ -825,6 +826,7 @@
               'SDK not loaded yet - URL preview will be available after loading';
           }
         } catch (error) {
+          console.error(error);
           document.getElementById('url-preview').textContent = `Error: ${error.message}`;
         }
       }
@@ -838,6 +840,15 @@
           case 'latest':
             customVersionInput.disabled = true;
             customVersionInput.value = '';
+            // Clear dev base URL when switching back to latest
+            document.getElementById('baseUrl').value = '';
+            break;
+          case 'dev':
+            customVersionInput.disabled = true;
+            customVersionInput.value = '';
+            // Set dev base URL
+            document.getElementById('baseUrl').value =
+              'https://cdn.chekin.com/guest-sdk/dev';
             break;
           case 'custom':
             customVersionInput.disabled = false;
@@ -989,6 +1000,7 @@
             `SDK initialized successfully with API key: ${config.apiKey.substring(0, 8)}...`,
           );
         } catch (error) {
+          console.error(error);
           log(`Failed to initialize SDK: ${error.message}`, 'error');
         } finally {
           isLoading = false;
@@ -1051,6 +1063,7 @@
           localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
           log('Configuration saved to localStorage');
         } catch (error) {
+          console.error(error);
           log('Failed to save configuration:', error.message);
         }
       };
@@ -1069,6 +1082,7 @@
           updateUrlPreview();
           log('Configuration loaded from localStorage');
         } catch (error) {
+          console.error(error);
           log('Failed to load configuration:', error.message);
         }
       };
@@ -1081,6 +1095,7 @@
           localStorage.removeItem(STORAGE_KEY);
           log('Configuration reset to defaults');
         } catch (error) {
+          console.error(error);
           log('Failed to reset configuration:', error.message);
         }
       };
@@ -1126,6 +1141,7 @@
             updateUrlPreview();
             log('Guest SDK Sandbox loaded. Configuration restored from localStorage.');
           } catch (error) {
+            console.error(error);
             log('Failed to load saved configuration, using defaults:', error.message);
             populateForm(defaultConfig);
             updateSDKUrl();
