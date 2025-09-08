@@ -170,7 +170,7 @@ export class ChekinGuestSDK {
 
       this.iframe.setAttribute(
         'sandbox',
-        'allow-modals allow-forms allow-popups allow-scripts allow-same-origin',
+        'allow-forms allow-popups allow-scripts allow-same-origin',
       );
 
       this.iframe.onload = () => {
