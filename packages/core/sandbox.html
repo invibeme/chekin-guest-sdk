@@ -983,19 +983,6 @@
           // Render the SDK
           await sdk.render('chekin-container');
 
-          // Handle initial route sync if URL has hash preloaded
-          if (config.routeSync !== false && window.location.hash) {
-            const hash = window.location.hash.slice(1);
-            const routeMatch = hash.match(/^chekin=(.+)/);
-            if (routeMatch) {
-              const route = decodeURIComponent(routeMatch[1]);
-              setTimeout(() => {
-                sdk.navigate(route);
-                log(`Initial route sync: navigated to ${route}`);
-              }, 100); // Small delay to ensure iframe is fully ready
-            }
-          }
-
           log(
             `SDK initialized successfully with API key: ${config.apiKey.substring(0, 8)}...`,
           );
